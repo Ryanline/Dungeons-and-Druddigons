@@ -1,0 +1,365 @@
+/* moves.css */
+
+/* Pokémon RS font */
+@font-face{
+  font-family: "PokemonRS";
+  src: url("resources/fonts/pokemon-rs.otf") format("opentype");
+  font-display: swap;
+}
+
+.moves-page .lede{
+  max-width: 70ch;
+}
+
+/* Two-panel shell */
+.moves-shell{
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+/* Match heights so both panels align */
+.moves-left,
+.moves-right{
+  border: 1px solid rgba(0,0,0,0.12);
+  background: #fff;
+}
+
+/* Square corners */
+.moves-left,
+.moves-right{
+  border-radius: 0;
+}
+
+/* Tabs */
+.moves-tabs{
+  display: flex;
+  gap: 8px;
+  padding: 12px 12px 8px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+}
+
+.tab{
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+  font-size: 20px;
+  background: #f4f4f4;
+  border: 1px solid rgba(0,0,0,0.12);
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.tab.is-active{
+  background: #fff;
+  border-color: rgba(0,0,0,0.22);
+}
+
+/* Filter bar */
+.moves-filters{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+}
+
+.pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  padding: 6px 10px;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: #fafafa;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pill.is-active{
+  background: #fff;
+  border-color: rgba(0,0,0,0.25);
+}
+
+.pill .star{
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Search */
+.moves-search{
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+}
+
+.moves-search__input{
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid rgba(0,0,0,0.18);
+  background: #fff;
+  outline: none;
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+}
+
+.moves-search__input:focus{
+  border-color: rgba(0,0,0,0.35);
+}
+
+/* Column headers */
+.moves-header{
+  display: grid;
+  grid-template-columns: 28px 1.2fr 34px 0.8fr 1fr 0.9fr;
+  gap: 10px;
+
+  padding: 6px 14px;
+  margin: 6px 6px 2px 6px;
+
+  font-family: "PokemonRS", sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  color: #444;
+  border-bottom: 1px solid rgba(0,0,0,0.15);
+}
+
+/* Scrollable list area */
+.moves-list{
+  height: 520px;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  padding: 6px 6px 10px 6px;
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+}
+
+.moves-loading{
+  padding: 14px 10px;
+  color: #555;
+}
+
+/* Row */
+.move-row{
+  display: grid;
+  grid-template-columns: 28px 1.2fr 44px 0.8fr 1fr 0.9fr;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 8px;
+  margin: 6px 6px;
+  cursor: pointer;
+  background: #fff;
+}
+
+/* Red rectangle highlight */
+.move-row:hover,
+.move-row.is-selected{
+  outline: 2px solid #c84b5a;
+  outline-offset: -2px;
+}
+
+.move-star{
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: #f8f8f8;
+  cursor: pointer;
+}
+
+.move-star.is-fav{
+  background: #fff1a8;
+  border-color: rgba(0,0,0,0.22);
+}
+
+.move-name{
+  font-size: 18px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.type-icon{
+  width: 42px;
+  height: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.meta{
+  font-size: 18px;
+  color: #222;
+  opacity: 0.9;
+}
+
+/* Right detail panel */
+.moves-right{
+  font-family: "PokemonRS", system-ui, sans-serif;
+}
+
+.moves-right .move-detail{
+  height: 610px;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  padding: 14px 14px 18px 14px;
+}
+
+.move-detail__empty{
+  color: #444;
+}
+
+.poke-title{
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.detail-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.detail-name{
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+  font-size: 24px;
+  margin: 0;
+}
+
+.detail-type{
+  width: 60px;
+  height: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.detail-desc{
+  border-top: 1px solid rgba(0,0,0,0.10);
+  padding-top: 12px;
+  line-height: 1.6;
+  font-size: 18px;
+}
+
+.detail-stack{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0 14px 0;
+}
+
+.detail-item{
+  line-height: 1.35;
+  font-size: 18px;
+}
+
+/* ---------- Mobile modal ---------- */
+
+.moves-modal{
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9999;
+}
+
+.moves-modal.is-open{
+  display: block;
+}
+
+.moves-modal__backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+}
+
+.moves-modal__panel{
+  position: relative;
+  width: min(520px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  margin: 24px auto;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.18);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  overflow: hidden;
+}
+
+.moves-modal__content{
+  padding: 14px;
+}
+
+.moves-modal__close{
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: transparent;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: system-ui, sans-serif;
+  opacity: 0.8;
+}
+
+.moves-modal__close:hover{
+  opacity: 1;
+}
+
+/* Make the modal detail scroll independently */
+.move-detail--modal{
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding: 0;
+}
+
+/* Prevent background scrolling when modal is open */
+body.moves-modal-open{
+  overflow: hidden;
+}
+
+.detail-head__right{
+  display: flex;
+  align-items: center;   /* ✅ line up icon + X */
+  gap: 10px;
+}
+
+.moves-modal__close--inhead{
+  position: static;
+  width: 36px;
+  height: 36px;
+  font-size: 30px;
+  line-height: 1;
+  margin-top: -6px;             /* ✅ remove the upward nudge */
+  padding: 0;
+}
+
+/* Hide the old absolute close button in the modal chrome on narrow screens */
+@media (max-width: 980px){
+  .moves-modal__close:not(.moves-modal__close--inhead){
+    display: none;
+  }
+}
+
+/* ---------- Responsive behavior ---------- */
+@media (max-width: 980px){
+  /* list becomes full width */
+  .moves-shell{
+    grid-template-columns: 1fr;
+  }
+
+  /* hide the desktop right column */
+  .moves-right{
+    display: none;
+  }
+
+  /* slightly shorter list on mobile */
+  .moves-list{
+    height: 520px;
+  }
+}

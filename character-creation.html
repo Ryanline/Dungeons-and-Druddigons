@@ -1,0 +1,120 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dungeons and Druddigons — Character creation</title>
+  <link rel="icon" type="image/png" href="resources/images/logo/druddigon-favicon.png">
+
+<!-- Open Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Top Nav -->
+  <header class="topbar" role="banner">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="index.html" aria-label="Dungeons and Druddigons Home">
+        Dungeons and Druddigons
+      </a>
+
+      <ul class="nav-links">
+        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link is-active" href="character-creation.html">Character Creation</a></li>
+        <li><a class="nav-link" href="moves.html">Moves</a></li>
+        <li><a class="nav-link" href="abilities.html">Abilities</a></li>
+      </ul>
+
+      <!-- Mobile menu button (optional; JS toggles) -->
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        ☰
+      </button>
+    </nav>
+    <div class="accent-bar" aria-hidden="true"></div>
+  </header>
+
+  <!-- Page -->
+  <main class="page" role="main">
+    <div class="content">
+
+      <h1>Character creation</h1>
+
+      <p class="lede">
+        Follow this guide to create your character. Fill out a
+        <a href="resources/character/character-sheet.pdf" target="_blank" rel="noopener" class="inline-link">character sheet</a>
+        as you go.
+      </p>
+
+      <section class="step" id="step-1" aria-labelledby="step-1-title">
+        <h2 id="step-1-title"><span class="step-num">1.</span> Select a Pokémon</h2>
+        <p>
+            Choose a Pokémon to play as. Your starting Pokémon cannot be Legendary or Mythical. Choose one of its abilities and record it on your character sheet. For example, Pikachu may choose Static or Lightning Rod. See the <a href="abilities.html" class="inline-link">abilities list</a> to find out what abilities do.
+        </p>
+      </section>
+
+            <section class="step" id="step-2" aria-labelledby="step-2-title">
+        <h2 id="step-2-title"><span class="step-num">2.</span> Select a class</h2>
+        <p class="step-sub">Choose a class from the following list. Record any class features on your character sheet.</p>
+        <ul class="bullets">
+          <li><a href="http://dnd2024.wikidot.com/artificer:main" class="inline-link">Artificer</a></li>
+          <li><a href="http://dnd2024.wikidot.com/barbarian:main" class="inline-link">Barbarian</a></li>
+          <li><a href="http://dnd2024.wikidot.com/bard:main" class="inline-link">Bard</a></li>
+          <li><a href="http://dnd2024.wikidot.com/cleric:main" class="inline-link">Cleric</a></li>
+          <li><a href="http://dnd2024.wikidot.com/druid:main" class="inline-link">Druid</a></li>
+          <li><a href="http://dnd2024.wikidot.com/fighter:main" class="inline-link">Fighter</a></li>
+          <li><a href="http://dnd2024.wikidot.com/monk:main" class="inline-link">Monk</a></li>
+          <li><a href="http://dnd2024.wikidot.com/paladin:main" class="inline-link">Paladin</a></li>
+          <li><a href="http://dnd2024.wikidot.com/ranger:main" class="inline-link">Ranger</a></li>
+          <li><a href="http://dnd2024.wikidot.com/rogue:main" class="inline-link">Rogue</a></li>
+          <li><a href="http://dnd2024.wikidot.com/sorcerer:main" class="inline-link">Sorcerer</a></li>
+          <li><a href="http://dnd2024.wikidot.com/warlock:main" class="inline-link">Warlock</a></li>
+          <li><a href="http://dnd2024.wikidot.com/wizard:main" class="inline-link">Wizard</a></li>
+        </ul>
+      </section>
+
+      <section class="step" id="step-3" aria-labelledby="step-3-title">
+        <h2 id="step-3-title"><span class="step-num">3.</span> Determine ability scores</h2>
+        <p>
+            Designate ability scores using your preferred method such as <a href="https://roll20.net/compendium/dnd5e/Rules:Step%203%20-%20Ability%20Scores" class="inline-link">Standard Array</a>, <a href="https://chicken-dinner.com/5e/5e-point-buy.html" class="inline-link">Point Buy/Point Cost</a>, dice rolls, or otherwise. Record these on your character sheet. 
+        </p>
+      </section>
+
+      <section class="step" id="step-4" aria-labelledby="step-4-title">
+        <h2 id="step-4-title"><span class="step-num">4.</span> Select a background</h2>
+        <p>
+            Select a <a href="https://pages.roll20.net/dnd/2024-backgrounds" class="inline-link">Background</a> as usual. Record any background features on your character sheet. 
+        </p>
+      </section>
+
+      <section class="step" id="step-5" aria-labelledby="step-5-title">
+        <h2 id="step-5-title"><span class="step-num">5.</span> Miscellaneous</h2>
+        <p>
+            <strong>Armor class. </strong>Calculate your starting AC as if you were wearing your class’ typical starting armor, including shields, if applicable. In a typical setting where Pokémon are generally unclothed, this will function as your naked AC and you will gain +1 AC at levels 4, 8, 12, 16, and 20. Your AC may also be influenced by Held Items such as the Eviolite. Alternatively, your DM may opt for a setting in which Pokémon simply do wear armor. In this case, handle AC as usual. 
+        </p> 
+        <p>
+            <strong>Type effectiveness. </strong>Attack rolls for super-effective moves are made with advantage, while attack rolls for not-very-effective moves are made with disadvantage. Similarly, saving throws made against super-effective moves are made with disadvantage, while saving throws made against not-very-effective moves are made with advantage. Refer to a <a href="https://pokemondb.net/type" class="inline-link">Type Chart</a> to see how the types interact. 
+        </p>
+        <p>
+            <strong>Darkvision. </strong>Dark- and Ghost-type Pokémon have Darkvision inherently with a range of 60 feet. This effect does <em>not</em> stack to become superior darkvision for Pokémon such as Sableye and Spiritomb. 
+        </p>
+      </section>
+
+      <!-- Placeholder anchors so your nav links don’t “do nothing” yet -->
+      <div class="sr-only" aria-hidden="true">
+        <span id="pokemon"></span>
+        <span id="moves"></span>
+        <span id="tms"></span>
+        <span id="items"></span>
+        <span id="classes"></span>
+      </div>
+
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

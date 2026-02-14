@@ -1,0 +1,256 @@
+/* abilities.css */
+
+/* Pokémon RS font */
+@font-face{
+  font-family: "PokemonRS";
+  src: url("resources/fonts/pokemon-rs.otf") format("opentype");
+  font-display: swap;
+}
+
+.abilities-page .lede{
+  max-width: 70ch;
+}
+
+/* Two-panel shell */
+.ab-shell{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.ab-left,
+.ab-right{
+  border: 1px solid rgba(0,0,0,0.12);
+  background: #fff;
+  border-radius: 0; /* square corners */
+}
+
+/* Left header */
+.ab-header{
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* Search bar */
+.ab-search{
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+  background: #fff;
+}
+
+#ab-search-input{
+  width: 100%;
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+  font-size: 16px;
+  padding: 10px 10px;
+  border: 1px solid rgba(0,0,0,0.18);
+  border-radius: 0;
+  outline: none;
+  background: #fafafa;
+}
+
+#ab-search-input:focus{
+  background: #fff;
+  border-color: rgba(0,0,0,0.28);
+}
+
+/* Scrollable list */
+.ab-list{
+  height: 610px;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  padding: 6px 6px 10px 6px;
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+}
+
+.ab-loading{
+  padding: 14px 10px;
+  color: #555;
+}
+
+/* Row */
+.ab-row{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 10px;
+  margin: 6px 6px;
+  cursor: pointer;
+  background: #fff;
+}
+
+/* Red rectangle highlight like Gen 3 */
+.ab-row:hover,
+.ab-row.is-selected{
+  outline: 2px solid #c84b5a; /* drud-red */
+  outline-offset: -2px;
+}
+
+.ab-name{
+  font-size: 18px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Right detail (desktop) */
+.ab-right{
+  font-family: "PokemonRS", system-ui, sans-serif;
+}
+
+.ab-right .ab-detail{
+  height: 610px;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  padding: 14px 14px 18px 14px;
+}
+
+.ab-detail__empty{
+  color: #444;
+}
+
+.poke-title{
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.ab-detail-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.ab-detail-name{
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+  font-size: 24px;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ab-desc{
+  border-top: 1px solid rgba(0,0,0,0.10);
+  padding-top: 12px;
+  line-height: 1.6;
+  font-size: 18px;
+}
+
+/* ---------- Mobile modal (Abilities) ---------- */
+
+.ab-modal{
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9999;
+}
+
+.ab-modal.is-open{
+  display: block;
+}
+
+.ab-modal__backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+}
+
+.ab-modal__panel{
+  position: relative;
+  width: min(520px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  margin: 24px auto;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.18);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  overflow: hidden;
+}
+
+.ab-modal__content{
+  padding: 14px;
+}
+
+/* Old absolute X (kept as a fallback; hidden on narrow screens) */
+.ab-modal__close{
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: transparent;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: system-ui, sans-serif;
+  opacity: 0.8;
+}
+.ab-modal__close:hover{ opacity: 1; }
+
+/* Modal detail scroll */
+.ab-detail--modal{
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding: 0;
+}
+
+/* Prevent background scrolling when modal is open */
+body.ab-modal-open{
+  overflow: hidden;
+}
+
+/* Right side of the modal header: just the X */
+.ab-detail-head__right{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Close button INSIDE header (so it behaves like Moves) */
+.ab-modal__close--inhead{
+  position: static;
+  width: 36px;
+  height: 36px;
+  font-size: 30px;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: system-ui, sans-serif;
+  opacity: 0.8;
+}
+.ab-modal__close--inhead:hover{ opacity: 1; }
+
+/* Hide the old absolute close button on narrow screens */
+@media (max-width: 980px){
+  .ab-modal__close:not(.ab-modal__close--inhead){
+    display: none;
+  }
+}
+
+/* ---------- Responsive behavior ---------- */
+@media (max-width: 980px){
+  .ab-shell{
+    grid-template-columns: 1fr; /* list full width */
+  }
+
+  .ab-right{
+    display: none; /* hide desktop right column */
+  }
+
+  .ab-list{
+    height: 610px; /* keep same feel as moves */
+  }
+}

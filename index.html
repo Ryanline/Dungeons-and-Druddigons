@@ -1,0 +1,89 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dungeons and Druddigons — Character creation</title>
+
+<!-- Open Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="resources/images/logo/druddigon-favicon.png">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Top Nav -->
+  <header class="topbar" role="banner">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="index.html" aria-label="Dungeons and Druddigons Home">
+        Dungeons and Druddigons
+      </a>
+
+      <ul class="nav-links">
+        <li><a class="nav-link is-active" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="character-creation.html">Character Creation</a></li>
+        <li><a class="nav-link" href="moves.html">Moves</a></li>
+        <li><a class="nav-link" href="abilities.html">Abilities</a></li>
+      </ul>
+
+      <!-- Mobile menu button (optional; JS toggles) -->
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        ☰
+      </button>
+    </nav>
+    <div class="accent-bar" aria-hidden="true"></div>
+  </header>
+
+  <!-- Page -->
+  <main class="page" role="main">
+    <div class="content">
+        <div class="hero">
+            <img id="hero-a" class="hero-img is-active" src="resources/images/slides/arcanine.webp" alt="Arcanine artwork">
+            <img id="hero-b" class="hero-img" src="resources/images/slides/pikachu.jpg" alt="Pikachu artwork" aria-hidden="true">
+        </div>
+        <h1>Dungeons &amp; Druddigons</h1>
+
+      <section class="step" id="step-2" aria-labelledby="step-2-title">
+        <h2 id="step-2-title">What is Dungeons &amp; Druddigons?</h2>
+        <p>
+            Dungeons &amp; Druddigons is a D&amp;D 5e Pokémon homebrew adaptation built for playing D&amp;D 5e as Pokémon player characters. Character classes and many other features remain the same as in vanilla D&amp;D 5e. But instead of typical character species, players choose a Pokémon species to play as. Instead of species features, Pokémon species have <a href="abilities.html" class="inline-link">Abilities</a>. And instead of spells and weapons, Pokémon learn <a href="moves.html" class="inline-link">Moves</a> that they can use in and out of battle.
+        </p>
+        
+      <section class="step" id="step-2" aria-labelledby="step-2-title">
+        <h2 id="step-2-title">Design philosophy</h2>
+        <p>
+            You may be wondering, <q>Why would I use this system when things like Poke5e already exist?</q> To that I would say, you <em>should</em> check out Poke5e first. The system is better quality than this and more robust. I recommend taking a look at <a href="https://poke5e.app/" class="inline-link">Poke5e.app</a> before proceeding here. 
+        </p>
+        <p>
+            That being said, Poke5e was built for playing as Pokémon <em>trainers</em>. While there are guides for how to adapt it for Pokémon character play, this is less balanced since it's not what the system was built for. Dungeons &amp; Druddigons simply fills a different niche, as it is designed first and foremost for players to play as Pokémon characters — such as in a Pokémon Mystery Dungeon campaign setting. 
+        </p>
+        <p>
+            Our design philosophy is two-fold. First, Dungeons &amp; Druddigons is meant to add minimal changes to vanilla D&amp;D 5e. More often than not, we rely on preexisting gameplay mechanics instead of trying to reinvent the wheel. D&amp;D veterans should have an easy time jumping in. 
+        </p>
+        <p>
+            Second, this is D&amp;D first and Pokémon second, mechanically speaking. What this means is, whenever there is an overlap between D&amp;D conventions and Pokémon conventions, D&amp;D's conventions are favored. For example, D&amp;D has a level system where players can range from levels 1-20. Pokémon classically also has a level system where Pokémon can range from levels 1-100. Rather than adapting Pokémon's 1-100 system to work in D&amp;D, we simply rely on D&amp;D's level system as-is.  
+        </p>
+
+        <section class="step" id="step-2" aria-labelledby="step-2-title">
+        <h2 id="step-2-title">How do I get started?</h2>
+        <p>
+            Jump over to our <a href="https://poke5e.app/" class="inline-link">Character Creation</a> page to make your own Pokémon character!
+        </p>
+
+        <section class="letsgo-section">
+          <img src="resources/images/home/letsgo.svg" 
+              alt="Your very own Pokémon legend is about to unfold."
+              class="letsgo-image">
+        </section>
+
+        <section class="disclaimer">
+          <p><em>(!) Dungeons &amp; Druddigons is an unofficial, fan-made homebrew adaptation. Pokémon is © Nintendo / Game Freak / The Pokémon Company. Dungeons & Dragons is © Wizards of the Coast. This project is neither affiliated with nor endorsed by any of the above rights holders. This material is provided for personal, non-commercial use only.</em></p>
+        </section>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

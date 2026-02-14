@@ -1,0 +1,272 @@
+/* styles.css */
+:root{
+  /* Druddigon-ish palette (nav + accents only) */
+  --drud-red: #c84b5a;
+  --drud-blue: #197b8f;
+
+  --text: #111;
+  --muted: #444;
+  --bg: #fff;
+
+  --max: 980px;
+  --pad: 28px;
+}
+
+*{ box-sizing: border-box; }
+
+html, body{
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Open Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 2.10;
+}
+
+a{ color: inherit; }
+
+.inline-link{
+  color: #2b61ff;
+  text-underline-offset: 4px;
+}
+
+.inline-link:hover{
+  opacity: 0.85;
+}
+
+/* Top bar */
+.topbar{
+  background: var(--drud-red);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 14px var(--pad);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.brand{
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-links{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex: 1;
+}
+
+.nav-link{
+  color: rgba(255,255,255,0.95);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-link:hover{
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.nav-link.is-active{
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.nav-toggle{
+  display: none;
+  margin-left: auto;
+  border: 0;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.accent-bar{
+  height: 6px;
+  background: var(--drud-blue);
+}
+
+/* Page */
+.page{
+  padding: 56px var(--pad);
+}
+
+.content{
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+h1{
+  font-size: 44px;
+  line-height: 1.12;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+}
+
+.lede{
+  margin: 0 0 34px 0;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.step{
+  margin: 22px 0;
+}
+
+.step h2{
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.step-num{
+  font-weight: 700;
+}
+
+.step-sub{
+  margin: 0 0 10px 0;
+}
+
+.bullets{
+  margin: 0 0 0 22px;
+  padding: 0;
+}
+
+/* Screen-reader only utility */
+.sr-only{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hero {
+  max-width: var(--max);
+  margin: 28px auto 40px auto;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Both images fill the hero and stack */
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  /* This keeps your 2000x1500 images from stretching weirdly */
+  object-fit: cover;
+
+  opacity: 0;
+  transform: translateX(0);
+  transition: transform 1.5s ease, opacity 1.5s ease;
+}
+
+/* Make the hero a fixed aspect ratio so layout doesn’t jump */
+.hero::before {
+  content: "";
+  display: block;
+  /* 1500 / 2000 = 0.75 => 4:3 */
+  padding-top: 75%;
+}
+
+/* Visible image */
+.hero-img.is-active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Sliding out to the left */
+.hero-img.exit-left {
+  opacity: 0;
+  transform: translateX(-6%);
+}
+
+/* Starting position for the incoming image (off to the right) */
+.hero-img.enter-right {
+  opacity: 1;
+  transform: translateX(6%);
+}
+
+.letsgo-section {
+  margin-top: 60px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.letsgo-image {
+  max-width: 40%;   /* adjust as desired */
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated; /* keeps retro crisp look */
+}
+
+/* Mobile sizing */
+@media (max-width: 980px){
+  .letsgo-image{
+    width: 70%;
+    max-width: 70%;
+    margin: 16px auto; /* centers it */
+  }
+}
+
+/* Responsive: collapse nav links */
+@media (max-width: 760px){
+  .nav{
+    gap: 12px;
+  }
+
+  .nav-toggle{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-links{
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: var(--drud-red);
+    padding: 10px var(--pad) 18px var(--pad);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav-links.is-open{
+    display: flex;
+  }
+
+  h1{
+    font-size: 36px;
+  }
+
+  .page{
+    padding: 36px var(--pad);
+  }
+}

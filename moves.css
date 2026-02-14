@@ -7,6 +7,14 @@
   font-display: swap;
 }
 
+/* Make modal use the same Pokémon font as the right-side detail panel */
+.moves-modal,
+.moves-modal__panel,
+.moves-modal__content,
+.moves-modal .move-detail--modal{
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+}
+
 .moves-page .lede{
   max-width: 70ch;
 }
@@ -215,6 +223,10 @@
   font-family: "PokemonRS", "Open Sans", sans-serif;
   font-size: 20px;
   margin-bottom: 10px;
+}
+
+.detail-desc .poke-title{
+  font-weight: 700;
 }
 
 .detail-head{

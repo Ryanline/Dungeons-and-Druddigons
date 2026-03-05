@@ -30,8 +30,19 @@ const parseSpellLevel = (requirement) => {
 const isSpellMove = (move) => {
   const requirement = String(move.requirement || "").toLowerCase();
   const designation = String(move.designation || "").toLowerCase();
+  const actionType = String(move.actionType || "").toLowerCase();
+  const summary = String(move.summary || "").toLowerCase();
 
-  return requirement.includes("cantrip") || requirement.includes("spell") || designation.includes("spell");
+  const isLeveledSpell = /^lv\.?\s*\d+/.test(requirement.trim());
+
+  return (
+    requirement.includes("cantrip") ||
+    requirement.includes("spell") ||
+    isLeveledSpell ||
+    designation.includes("spell") ||
+    actionType.includes("spell") ||
+    summary.includes("spell")
+  );
 };
 
 const makeId = (name, index) => {
@@ -102,13 +113,6 @@ async function fetchMovesFromSheet() {
   }
 
   return Array.isArray(parsed.data) ? parsed.data : [];
-}
-
-async function fetchMovesFallbackJson() {
-  const fallback = await fetch(assetUrl("resources/data/data-moves.json"), { cache: "no-store" });
-  if (!fallback.ok) throw new Error(`Fallback JSON failed (${fallback.status})`);
-  const raw = await fallback.json();
-  return Array.isArray(raw) ? raw : raw.moves || raw.data || [];
 }
 
 function DetailCard({ move, isNarrow, onClose }) {
@@ -227,15 +231,7 @@ export function MovesPage() {
           setError("");
         }
       } catch (sheetError) {
-        try {
-          const source = await fetchMovesFallbackJson();
-          if (!cancelled) {
-            setAllMoves(source.map((item, index) => normalizeMove(item, index)));
-            setError(`Live sheet unavailable. Using fallback JSON. ${sheetError.message}`);
-          }
-        } catch (fallbackError) {
-          if (!cancelled) setError(`${sheetError.message} ${fallbackError.message}`);
-        }
+        if (!cancelled) setError(`Unable to load moves from Google Sheets. ${sheetError.message}`);
       }
     };
 

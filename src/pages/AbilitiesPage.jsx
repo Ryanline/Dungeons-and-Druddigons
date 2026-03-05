@@ -44,13 +44,6 @@ async function fetchAbilitiesFromSheet() {
   return Array.isArray(parsed.data) ? parsed.data : [];
 }
 
-async function fetchAbilitiesFallbackJson() {
-  const fallback = await fetch(assetUrl("resources/data/data-abilities.json"), { cache: "no-store" });
-  if (!fallback.ok) throw new Error(`Fallback JSON failed (${fallback.status})`);
-  const raw = await fallback.json();
-  return Array.isArray(raw) ? raw : raw.abilities || raw.data || [];
-}
-
 function AbilityDetail({ ability, isNarrow, onClose }) {
   if (!ability) {
     return (
@@ -139,15 +132,7 @@ export function AbilitiesPage() {
           setError("");
         }
       } catch (sheetError) {
-        try {
-          const source = await fetchAbilitiesFallbackJson();
-          if (!cancelled) {
-            setAllAbilities(source.map((item, index) => normalizeAbility(item, index)));
-            setError(`Live sheet unavailable. Using fallback JSON. ${sheetError.message}`);
-          }
-        } catch (fallbackError) {
-          if (!cancelled) setError(`${sheetError.message} ${fallbackError.message}`);
-        }
+        if (!cancelled) setError(`Unable to load abilities from Google Sheets. ${sheetError.message}`);
       }
     };
 

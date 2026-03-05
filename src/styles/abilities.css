@@ -1,9 +1,6 @@
-/* abilities.css */
-
-/* Pokémon RS font */
 @font-face{
   font-family: "PokemonRS";
-  src: url("resources/fonts/pokemon-rs.otf") format("opentype");
+  src: url("/resources/fonts/pokemon-rs.otf") format("opentype");
   font-display: swap;
 }
 
@@ -11,7 +8,6 @@
   max-width: 70ch;
 }
 
-/* Two-panel shell */
 .ab-shell{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -23,10 +19,9 @@
 .ab-right{
   border: 1px solid rgba(0,0,0,0.12);
   background: #fff;
-  border-radius: 0; /* square corners */
+  border-radius: 0;
 }
 
-/* Left header */
 .ab-header{
   padding: 10px 12px;
   border-bottom: 1px solid rgba(0,0,0,0.10);
@@ -37,7 +32,6 @@
   opacity: 0.85;
 }
 
-/* Search bar */
 .ab-search{
   padding: 10px 12px;
   border-bottom: 1px solid rgba(0,0,0,0.10);
@@ -60,7 +54,6 @@
   border-color: rgba(0,0,0,0.28);
 }
 
-/* Scrollable list */
 .ab-list{
   height: 610px;
   overflow-y: scroll;
@@ -74,7 +67,6 @@
   color: #555;
 }
 
-/* Row */
 .ab-row{
   display: grid;
   grid-template-columns: 1fr;
@@ -86,10 +78,9 @@
   background: #fff;
 }
 
-/* Red rectangle highlight like Gen 3 */
 .ab-row:hover,
 .ab-row.is-selected{
-  outline: 2px solid #c84b5a; /* drud-red */
+  outline: 2px solid #c84b5a;
   outline-offset: -2px;
 }
 
@@ -100,7 +91,6 @@
   letter-spacing: 0.04em;
 }
 
-/* Right detail (desktop) */
 .ab-right{
   font-family: "PokemonRS", system-ui, sans-serif;
 }
@@ -145,8 +135,6 @@
   font-size: 18px;
 }
 
-/* ---------- Mobile modal (Abilities) ---------- */
-
 .ab-modal{
   position: fixed;
   inset: 0;
@@ -179,7 +167,6 @@
   padding: 14px;
 }
 
-/* Old absolute X (kept as a fallback; hidden on narrow screens) */
 .ab-modal__close{
   position: absolute;
   top: 6px;
@@ -194,9 +181,9 @@
   font-family: system-ui, sans-serif;
   opacity: 0.8;
 }
+
 .ab-modal__close:hover{ opacity: 1; }
 
-/* Modal detail scroll */
 .ab-detail--modal{
   max-height: calc(100vh - 120px);
   overflow-y: auto;
@@ -204,19 +191,16 @@
   padding: 0;
 }
 
-/* Prevent background scrolling when modal is open */
 body.ab-modal-open{
   overflow: hidden;
 }
 
-/* Right side of the modal header: just the X */
 .ab-detail-head__right{
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Close button INSIDE header (so it behaves like Moves) */
 .ab-modal__close--inhead{
   position: static;
   width: 36px;
@@ -231,26 +215,23 @@ body.ab-modal-open{
   font-family: system-ui, sans-serif;
   opacity: 0.8;
 }
+
 .ab-modal__close--inhead:hover{ opacity: 1; }
 
-/* Hide the old absolute close button on narrow screens */
 @media (max-width: 980px){
   .ab-modal__close:not(.ab-modal__close--inhead){
     display: none;
   }
-}
 
-/* ---------- Responsive behavior ---------- */
-@media (max-width: 980px){
   .ab-shell{
-    grid-template-columns: 1fr; /* list full width */
+    grid-template-columns: 1fr;
   }
 
   .ab-right{
-    display: none; /* hide desktop right column */
+    display: none;
   }
 
   .ab-list{
-    height: 610px; /* keep same feel as moves */
+    height: 610px;
   }
 }

@@ -3,6 +3,8 @@
 Thumbs.db
 Desktop.ini
 .vscode/
+node_modules/
+dist/
 
 # Logs / temp
 *.log
@@ -17,4 +19,3 @@ Desktop.ini
 # Python cache (safe default)
 __pycache__/
 *.pyc
-

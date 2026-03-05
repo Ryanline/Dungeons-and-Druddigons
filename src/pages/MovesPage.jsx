@@ -271,6 +271,11 @@ export function MovesPage() {
     });
   }, [allMoves, currentTab, currentFilter, favs, searchQuery]);
 
+  const hasSuperGun = useMemo(
+    () => allMoves.some((move) => String(move.name || "").trim().toLowerCase() === "super gun"),
+    [allMoves]
+  );
+
   const selectedMove = useMemo(
     () => filteredMoves.find((move) => move.id === selectedId) || null,
     [filteredMoves, selectedId]
@@ -330,6 +335,9 @@ export function MovesPage() {
     <main className="page moves-page" role="main">
       <div className="content">
         <h1>Moves</h1>
+        <p className="lede" style={{ marginBottom: "12px" }}>
+          Debug: loaded moves={allMoves.length}, has &quot;Super gun&quot;={hasSuperGun ? "yes" : "no"}
+        </p>
 
         <p className="lede">
           Moves are categorized as <q>Weapon Attack Moves</q> and <q>Spell Moves.</q> The moves a

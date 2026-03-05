@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dungeons and Druddigons — Abilities</title>
+
+  <!-- Open Sans (site default) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="resources/images/logo/druddigon-favicon.png">
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="abilities.css" />
+</head>
+
+<body>
+  <header class="topbar" role="banner">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="index.html" aria-label="Dungeons and Druddigons Home">Dungeons and Druddigons</a>
+
+      <ul class="nav-links">
+        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="character-creation.html">Character Creation</a></li>
+        <li><a class="nav-link" href="moves.html">Moves</a></li>
+        <li><a class="nav-link is-active" href="abilities.html">Abilities</a></li>
+      </ul>
+
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
+    <div class="accent-bar" aria-hidden="true"></div>
+  </header>
+
+  <main class="page abilities-page" role="main">
+    <div class="content">
+      <h1>Abilities</h1>
+      <p class="lede">Click an ability to view its description.</p>
+
+      <div class="ab-shell" aria-label="Abilities Browser">
+        <section class="ab-left" aria-label="Ability List">
+          <div class="ab-header" aria-hidden="true">
+            <div>Ability</div>
+          </div>
+
+          <div class="ab-search" aria-label="Search abilities">
+            <input id="ab-search-input" type="search" placeholder="Search…" autocomplete="off" />
+          </div>
+
+          <div class="ab-list" role="list" aria-label="Abilities">
+            <div class="ab-loading">Loading abilities…</div>
+          </div>
+        </section>
+
+        <!-- Desktop-only right panel (hidden on narrow) -->
+        <section class="ab-right" aria-label="Ability Details">
+          <div class="ab-detail">
+            <div class="ab-detail__empty">
+              <div class="poke-title">Select an ability</div>
+              <p>Choose an ability from the list to view its details here.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile modal (Abilities) -->
+  <div class="ab-modal" id="ab-modal" aria-hidden="true">
+    <div class="ab-modal__backdrop" data-close="true"></div>
+
+    <div class="ab-modal__panel" role="dialog" aria-modal="true" aria-label="Ability details">
+      <!-- (desktop fallback; hidden on mobile via CSS, we also inject an in-header X) -->
+      <button class="ab-modal__close" type="button" aria-label="Close" title="Close">×</button>
+
+      <div class="ab-modal__content">
+        <div class="ab-detail ab-detail--modal" id="ab-modal-detail">
+          <div class="ab-detail__empty">
+            <div class="poke-title">Select an ability</div>
+            <p>Choose an ability from the list to view its details here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="abilities.js"></script>
+</body>
+</html>

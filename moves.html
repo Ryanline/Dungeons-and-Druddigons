@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dungeons and Druddigons — Moves</title>
+
+  <!-- Open Sans (site default) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="resources/images/logo/druddigon-favicon.png">
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="moves.css" />
+</head>
+
+<body>
+  <!-- Top Nav -->
+  <header class="topbar" role="banner">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="index.html" aria-label="Dungeons and Druddigons Home">Dungeons and Druddigons</a>
+
+      <ul class="nav-links">
+        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="character-creation.html">Character Creation</a></li>
+        <li><a class="nav-link is-active" href="moves.html">Moves</a></li>
+        <li><a class="nav-link" href="abilities.html">Abilities</a></li>
+      </ul>
+
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
+    <div class="accent-bar" aria-hidden="true"></div>
+  </header>
+
+  <main class="page moves-page" role="main">
+    <div class="content">
+      <h1>Moves</h1>
+
+      <p class="lede">
+        Moves are categorized as <q>Weapon Attack Moves</q> and <q>Spell Moves.</q>
+        The moves a Pokémon can learn are based on their usual movepool.
+        Use <a href="https://play.pokemonshowdown.com/" class="inline-link">Pokémon Showdown</a> or similar to check movepools.
+      </p>
+
+      <p class="lede">
+        Full-caster characters may select up to two Weapon Attack Moves from their movepool.
+        Partial-caster characters and Warlocks may select up to three Weapon Attack Moves.
+        Non-caster classes may select up to four Weapon Attack Moves.
+        Spell Moves are treated like D&amp;D spells and may only be learned by casters.
+      </p>
+
+      <div class="moves-shell" aria-label="Moves Browser">
+        <!-- LEFT -->
+        <section class="moves-left" aria-label="Move List">
+          <div class="moves-tabs" role="tablist" aria-label="Move Type Tabs">
+            <button class="tab is-active" id="tab-weapon" role="tab" aria-selected="true" data-tab="weapon">Weapon Attacks</button>
+            <button class="tab" id="tab-spell" role="tab" aria-selected="false" data-tab="spell">Spells</button>
+          </div>
+
+          <div class="moves-filters" aria-label="Filters">
+            <!-- JS fills this -->
+          </div>
+
+          <!-- Search bar (below filters, above headers) -->
+          <div class="moves-search" aria-label="Search moves">
+            <input
+              id="moves-search"
+              class="moves-search__input"
+              type="text"
+              inputmode="search"
+              autocomplete="off"
+              placeholder="Search moves…"
+              aria-label="Search moves by name"
+            />
+          </div>
+
+          <!-- Column headers -->
+          <div class="moves-header" aria-hidden="true">
+            <div></div> <!-- star -->
+            <div>Move</div>
+            <div></div> <!-- type icon -->
+            <div>Action</div>
+            <div>Range</div>
+            <div>Level</div>
+          </div>
+
+          <div class="moves-list" role="list" aria-label="Moves">
+            <div class="moves-loading">Loading moves…</div>
+          </div>
+        </section>
+
+        <!-- RIGHT (desktop/tablet wide only) -->
+        <section class="moves-right" aria-label="Move Details">
+          <div class="move-detail">
+            <div class="move-detail__empty">
+              <div class="poke-title">Select a move</div>
+              <p>Choose a move from the list to view its details here.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- MOBILE MODAL (used on narrow screens) -->
+  <div class="moves-modal" id="moves-modal" aria-hidden="true">
+    <div class="moves-modal__backdrop" data-close="true"></div>
+
+    <div class="moves-modal__panel" role="dialog" aria-modal="true" aria-label="Move details">
+      <button class="moves-modal__close" type="button" aria-label="Close" title="Close">
+        ×
+      </button>
+
+      <div class="moves-modal__content">
+        <!-- JS injects the same detail markup here -->
+        <div class="move-detail move-detail--modal" id="moves-modal-detail">
+          <div class="move-detail__empty">
+            <div class="poke-title">Select a move</div>
+            <p>Choose a move from the list to view its details here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="moves.js"></script>
+</body>
+</html>

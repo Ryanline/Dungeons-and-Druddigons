@@ -26,7 +26,7 @@ const makeId = (name, index) => {
 const normalizeAbility = (raw, index) => ({
   id: makeId(get(raw, ["Ability", "ability", "name"], ""), index),
   name: get(raw, ["Ability", "ability", "name"], ""),
-  effect: get(raw, ["Effect", "effect", "description"], ""),
+  effect: get(raw, ["Description", "Effect", "effect", "description"], ""),
 });
 
 async function fetchAbilitiesFromSheet() {

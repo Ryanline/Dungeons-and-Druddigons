@@ -44,20 +44,20 @@ const makeId = (name, index) => {
 };
 
 const normalizeMove = (raw, index) => {
-  const name = get(raw, ["Move Name", "moveName", "name", "Move"], "");
+  const name = get(raw, ["Attack", "Move Name", "moveName", "name", "Move"], "");
 
   return {
     id: makeId(name, index),
     name,
     type: get(raw, ["Move Type", "type", "Type"], ""),
-    designation: get(raw, ["Designation", "designation"], ""),
-    requirement: get(raw, ["Requirement", "requirement"], ""),
-    actionType: get(raw, ["Action Type", "actionType"], ""),
+    designation: get(raw, ["Category", "Designation", "designation"], ""),
+    requirement: get(raw, ["Level", "Requirement", "requirement"], ""),
+    actionType: get(raw, ["Casting Time", "Action Type", "actionType"], ""),
     range: get(raw, ["Range", "range"], ""),
     duration: get(raw, ["Duration", "duration"], ""),
     properties: get(raw, ["Properties", "properties"], ""),
-    summary: get(raw, ["Summary", "summary"], ""),
-    mechanics: get(raw, ["Mechanics", "mechanics"], ""),
+    summary: get(raw, ["Mini description", "Summary", "summary"], ""),
+    mechanics: get(raw, ["Description", "Mechanics", "mechanics"], ""),
     diceDamage: get(raw, ["Dice Damage", "diceDamage"], ""),
     moveTypeWord: get(raw, ["Move Type", "type", "Type"], ""),
   };

@@ -1,7 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
+import Papa from "papaparse";
 import { assetUrl } from "../utils/assetUrl";
 
 const FAV_KEY = "dd_move_favorites_v1";
+const SHEET_ID = "1Ip2J43ofUiTRxutGRyGiXfdm8_aclFBa1Dvdwm8FYhg";
+const MOVES_TAB = "moves";
 
 const get = (obj, keys, fallback = "") => {
   for (const key of keys) {
@@ -86,6 +89,28 @@ const saveFavs = (favs) => {
   localStorage.setItem(FAV_KEY, JSON.stringify([...favs]));
 };
 
+async function fetchMovesFromSheet() {
+  const sheetUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(MOVES_TAB)}`;
+  const response = await fetch(sheetUrl, { cache: "no-store" });
+  if (!response.ok) throw new Error(`Failed to load moves sheet (${response.status})`);
+
+  const csv = await response.text();
+  const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+
+  if (parsed.errors?.length) {
+    throw new Error("Moves sheet CSV parsing failed.");
+  }
+
+  return Array.isArray(parsed.data) ? parsed.data : [];
+}
+
+async function fetchMovesFallbackJson() {
+  const fallback = await fetch(assetUrl("resources/data/data-moves.json"), { cache: "no-store" });
+  if (!fallback.ok) throw new Error(`Fallback JSON failed (${fallback.status})`);
+  const raw = await fallback.json();
+  return Array.isArray(raw) ? raw : raw.moves || raw.data || [];
+}
+
 function DetailCard({ move, isNarrow, onClose }) {
   if (!move) {
     return (
@@ -116,7 +141,7 @@ function DetailCard({ move, isNarrow, onClose }) {
 
           {isNarrow && (
             <button className="moves-modal__close moves-modal__close--inhead" type="button" aria-label="Close" title="Close" onClick={onClose}>
-              �
+              ×
             </button>
           )}
         </div>
@@ -196,17 +221,21 @@ export function MovesPage() {
 
     const load = async () => {
       try {
-        const response = await fetch(assetUrl("resources/data/data-moves.json"), { cache: "no-store" });
-        if (!response.ok) throw new Error(`Failed to load moves (${response.status})`);
-        const raw = await response.json();
-
-        const source = Array.isArray(raw) ? raw : raw.moves || raw.data || [];
+        const source = await fetchMovesFromSheet();
         if (!cancelled) {
           setAllMoves(source.map((item, index) => normalizeMove(item, index)));
           setError("");
         }
-      } catch (loadError) {
-        if (!cancelled) setError(loadError.message);
+      } catch (sheetError) {
+        try {
+          const source = await fetchMovesFallbackJson();
+          if (!cancelled) {
+            setAllMoves(source.map((item, index) => normalizeMove(item, index)));
+            setError(`Live sheet unavailable. Using fallback JSON. ${sheetError.message}`);
+          }
+        } catch (fallbackError) {
+          if (!cancelled) setError(`${sheetError.message} ${fallbackError.message}`);
+        }
       }
     };
 
@@ -357,7 +386,7 @@ export function MovesPage() {
                   closeModal();
                 }}
               >
-                <span className="star">?</span>Fav
+                <span className="star">★</span>Fav
               </button>
               <button
                 type="button"
@@ -461,48 +490,47 @@ export function MovesPage() {
             </div>
 
             <div className="moves-list" role="list" aria-label="Moves">
-              {error && <div className="moves-loading">Could not load moves JSON: {error}</div>}
-              {!error && !allMoves.length && <div className="moves-loading">Loading moves...</div>}
-              {!error && allMoves.length > 0 && filteredMoves.length === 0 && (
+              {error && <div className="moves-loading">{error}</div>}
+              {!allMoves.length && <div className="moves-loading">Loading moves...</div>}
+              {allMoves.length > 0 && filteredMoves.length === 0 && (
                 <div className="moves-loading">No moves match this filter yet.</div>
               )}
 
-              {!error &&
-                filteredMoves.map((move) => (
-                  <div
-                    key={move.id}
-                    className={`move-row${move.id === selectedId ? " is-selected" : ""}`}
-                    role="listitem"
-                    onClick={() => handleMoveSelect(move)}
+              {filteredMoves.map((move) => (
+                <div
+                  key={move.id}
+                  className={`move-row${move.id === selectedId ? " is-selected" : ""}`}
+                  role="listitem"
+                  onClick={() => handleMoveSelect(move)}
+                >
+                  <button
+                    type="button"
+                    className={`move-star${favs.has(move.name) ? " is-fav" : ""}`}
+                    title={favs.has(move.name) ? "Unfavorite" : "Favorite"}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleFavorite(move.name);
+                    }}
                   >
-                    <button
-                      type="button"
-                      className={`move-star${favs.has(move.name) ? " is-fav" : ""}`}
-                      title={favs.has(move.name) ? "Unfavorite" : "Favorite"}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        toggleFavorite(move.name);
-                      }}
-                    >
-                      {favs.has(move.name) ? "?" : "?"}
-                    </button>
-                    <div className="move-name">{move.name || "-"}</div>
-                    <img
-                      className="type-icon"
-                      alt={move.type ? `${move.type} type` : "Type"}
-                      src={typeIconPath(move.type)}
-                      loading="lazy"
-                      onError={(event) => {
-                        event.currentTarget.style.visibility = "hidden";
-                      }}
-                    />
-                    <div className="meta">{move.actionType || "-"}</div>
-                    <div className="meta">
-                      {(move.designation || "-").replace("Weapon Attack", "").replace("Spell Attack", "Spell").trim() || "-"}
-                    </div>
-                    <div className="meta">{move.requirement || "-"}</div>
+                    {favs.has(move.name) ? "★" : "☆"}
+                  </button>
+                  <div className="move-name">{move.name || "-"}</div>
+                  <img
+                    className="type-icon"
+                    alt={move.type ? `${move.type} type` : "Type"}
+                    src={typeIconPath(move.type)}
+                    loading="lazy"
+                    onError={(event) => {
+                      event.currentTarget.style.visibility = "hidden";
+                    }}
+                  />
+                  <div className="meta">{move.actionType || "-"}</div>
+                  <div className="meta">
+                    {(move.designation || "-").replace("Weapon Attack", "").replace("Spell Attack", "Spell").trim() || "-"}
                   </div>
-                ))}
+                  <div className="meta">{move.requirement || "-"}</div>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -518,7 +546,7 @@ export function MovesPage() {
         <div className="moves-modal__backdrop" data-close="true" onClick={closeModal} />
         <div className="moves-modal__panel" role="dialog" aria-modal="true" aria-label="Move details">
           <button className="moves-modal__close" type="button" aria-label="Close" title="Close" onClick={closeModal}>
-            �
+            ×
           </button>
 
           <div className="moves-modal__content">

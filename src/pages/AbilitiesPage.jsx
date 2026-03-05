@@ -1,5 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+ï»¿import { useEffect, useMemo, useRef, useState } from "react";
+import Papa from "papaparse";
 import { assetUrl } from "../utils/assetUrl";
+
+const SHEET_ID = "1Ip2J43ofUiTRxutGRyGiXfdm8_aclFBa1Dvdwm8FYhg";
+const ABILITIES_TAB = "abilities";
 
 const get = (obj, keys, fallback = "") => {
   for (const key of keys) {
@@ -25,6 +29,28 @@ const normalizeAbility = (raw, index) => ({
   effect: get(raw, ["Effect", "effect", "description"], ""),
 });
 
+async function fetchAbilitiesFromSheet() {
+  const sheetUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(ABILITIES_TAB)}`;
+  const response = await fetch(sheetUrl, { cache: "no-store" });
+  if (!response.ok) throw new Error(`Failed to load abilities sheet (${response.status})`);
+
+  const csv = await response.text();
+  const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+
+  if (parsed.errors?.length) {
+    throw new Error("Abilities sheet CSV parsing failed.");
+  }
+
+  return Array.isArray(parsed.data) ? parsed.data : [];
+}
+
+async function fetchAbilitiesFallbackJson() {
+  const fallback = await fetch(assetUrl("resources/data/data-abilities.json"), { cache: "no-store" });
+  if (!fallback.ok) throw new Error(`Fallback JSON failed (${fallback.status})`);
+  const raw = await fallback.json();
+  return Array.isArray(raw) ? raw : raw.abilities || raw.data || [];
+}
+
 function AbilityDetail({ ability, isNarrow, onClose }) {
   if (!ability) {
     return (
@@ -42,7 +68,7 @@ function AbilityDetail({ ability, isNarrow, onClose }) {
         <div className="ab-detail-head__right">
           {isNarrow && (
             <button className="ab-modal__close--inhead" type="button" aria-label="Close" title="Close" onClick={onClose}>
-              ×
+              Ã—
             </button>
           )}
         </div>
@@ -107,17 +133,21 @@ export function AbilitiesPage() {
 
     const load = async () => {
       try {
-        const response = await fetch(assetUrl("resources/data/data-abilities.json"), { cache: "no-store" });
-        if (!response.ok) throw new Error(`Failed to load abilities (${response.status})`);
-        const raw = await response.json();
-        const source = Array.isArray(raw) ? raw : raw.abilities || raw.data || [];
-
+        const source = await fetchAbilitiesFromSheet();
         if (!cancelled) {
           setAllAbilities(source.map((item, index) => normalizeAbility(item, index)));
           setError("");
         }
-      } catch (loadError) {
-        if (!cancelled) setError(loadError.message);
+      } catch (sheetError) {
+        try {
+          const source = await fetchAbilitiesFallbackJson();
+          if (!cancelled) {
+            setAllAbilities(source.map((item, index) => normalizeAbility(item, index)));
+            setError(`Live sheet unavailable. Using fallback JSON. ${sheetError.message}`);
+          }
+        } catch (fallbackError) {
+          if (!cancelled) setError(`${sheetError.message} ${fallbackError.message}`);
+        }
       }
     };
 
@@ -210,21 +240,20 @@ export function AbilitiesPage() {
             </div>
 
             <div className="ab-list" role="list" aria-label="Abilities">
-              {error && <div className="ab-loading">Could not load abilities JSON: {error}</div>}
-              {!error && !allAbilities.length && <div className="ab-loading">Loading abilities...</div>}
-              {!error && allAbilities.length > 0 && visibleAbilities.length === 0 && <div className="ab-loading">No results.</div>}
+              {error && <div className="ab-loading">{error}</div>}
+              {!allAbilities.length && <div className="ab-loading">Loading abilities...</div>}
+              {allAbilities.length > 0 && visibleAbilities.length === 0 && <div className="ab-loading">No results.</div>}
 
-              {!error &&
-                visibleAbilities.map((ability) => (
-                  <div
-                    key={ability.id}
-                    className={`ab-row${ability.id === selectedId ? " is-selected" : ""}`}
-                    role="listitem"
-                    onClick={() => handleSelect(ability)}
-                  >
-                    <div className="ab-name">{ability.name || "-"}</div>
-                  </div>
-                ))}
+              {visibleAbilities.map((ability) => (
+                <div
+                  key={ability.id}
+                  className={`ab-row${ability.id === selectedId ? " is-selected" : ""}`}
+                  role="listitem"
+                  onClick={() => handleSelect(ability)}
+                >
+                  <div className="ab-name">{ability.name || "-"}</div>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -241,7 +270,7 @@ export function AbilitiesPage() {
 
         <div className="ab-modal__panel" role="dialog" aria-modal="true" aria-label="Ability details">
           <button className="ab-modal__close" type="button" aria-label="Close" title="Close" onClick={closeModal}>
-            ×
+            Ã—
           </button>
 
           <div className="ab-modal__content">

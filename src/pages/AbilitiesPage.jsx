@@ -2,7 +2,7 @@
 import Papa from "papaparse";
 import { assetUrl } from "../utils/assetUrl";
 
-const SHEET_ID = "1Ip2J43ofUiTRxutGRyGiXfdm8_aclFBa1Dvdwm8FYhg";
+const SHEET_ID = "1jxuYYlsJmwDGGaq533WraM2tkCr22WU4EuY92lpbzHk";
 const ABILITIES_TAB = "abilities";
 
 const get = (obj, keys, fallback = "") => {

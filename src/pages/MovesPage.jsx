@@ -3,7 +3,7 @@ import Papa from "papaparse";
 import { assetUrl } from "../utils/assetUrl";
 
 const FAV_KEY = "dd_move_favorites_v1";
-const SHEET_ID = "1Ip2J43ofUiTRxutGRyGiXfdm8_aclFBa1Dvdwm8FYhg";
+const SHEET_ID = "1jxuYYlsJmwDGGaq533WraM2tkCr22WU4EuY92lpbzHk";
 const MOVES_TAB = "moves";
 
 const get = (obj, keys, fallback = "") => {

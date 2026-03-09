@@ -330,22 +330,6 @@ export function MovesPage() {
       <div className="content">
         <h1>Moves</h1>
 
-        <p className="lede">
-          Moves are categorized as <q>Weapon Attack Moves</q> and <q>Spell Moves.</q> The moves a
-          Pokemon can learn are based on their usual movepool. Use{" "}
-          <a href="https://play.pokemonshowdown.com/" className="inline-link" target="_blank" rel="noreferrer">
-            Pokemon Showdown
-          </a>{" "}
-          or similar to check movepools.
-        </p>
-
-        <p className="lede">
-          Full-caster characters may select up to two Weapon Attack Moves from their movepool.
-          Partial-caster characters and Warlocks may select up to three Weapon Attack Moves.
-          Non-caster classes may select up to four Weapon Attack Moves. Spell Moves are treated
-          like D&amp;D spells and may only be learned by casters.
-        </p>
-
         <div className="moves-shell" aria-label="Moves Browser">
           <section className="moves-left" aria-label="Move List">
             <div className="moves-list-frame">
@@ -428,6 +412,73 @@ export function MovesPage() {
             </div>
           </section>
         </div>
+
+        <section className="moves-doc" aria-label="Moves Guide">
+          <p>
+            Moves are the primary abilities used by Pokemon in combat and exploration. Every Pokemon has access to a
+            movepool, which represents all of the moves it could potentially learn. Moves fall into the following
+            categories:
+          </p>
+
+          <ul>
+            <li>Attack Moves. These function as weapons.</li>
+            <li>Special Moves. These function as spells.</li>
+            <li>Special Attack Moves. These are damage-dealing Special Moves.</li>
+            <li>Status Moves. These provide utility, buffs, debuffs, or other effects.</li>
+          </ul>
+
+          <h2>Movepools</h2>
+          <p>
+            All of the moves a Pokemon can learn are referred to as its Movepool. This consists of level-up moves,
+            TM/HM moves, tutor moves, and egg moves. Use{" "}
+            <a href="https://play.pokemonshowdown.com/" className="inline-link" target="_blank" rel="noreferrer">
+              Pokemon Showdown
+            </a>{" "}
+            to check a Pokemon&apos;s movepool. A Pokemon may only naturally learn moves from its movepool.
+          </p>
+
+          <h2>Attack Moves</h2>
+          <p>
+            Attack Moves correspond to weapons. These are often (but not always) associated with physical attacks
+            classic to Pokemon, such as Tackle, Bite, Iron Tail, and so on. These moves have Masteries (Topple,
+            Nick, etc.) and Properties (Finesse, Reach, etc.) the same as weapons usually do.
+          </p>
+
+          <h2>Special Moves</h2>
+          <p>
+            Special Moves correspond to spells. These are often (but not always) associated with special attacks and
+            status moves classic to Pokemon, such as Fire Blast, Thunderbolt, and Blizzard. These are either
+            Cantrips, which may be cast without cost, or may require some level special slot (similar to a spell
+            slot) to be cast.
+          </p>
+
+          <h2>Learning Moves</h2>
+          <p>
+            Regarding Attack Moves: full-casters may know two Attack Moves, partial-casters and Warlocks may know
+            three, and non-casters may know four. Multi-classed characters are treated as whichever class they started
+            as at level 1 for the purposes of Attack Move quantities, regardless of which class(es) are multiclassed
+            to, similar to how saving throw proficiencies are handled. Attack Moves are available according to a
+            character&apos;s total character level. At character creation, and at each level-up from there on, a
+            character may learn (or replace) any number of Attack moves so long as the character (a) may learn it
+            according to their movepool and (b) may use it according to their total character level.
+          </p>
+
+          <p>
+            Regarding Special Moves, these are learned as spells typically would be. For example, a level 1 sorcerer
+            would have two 1st-level spell slots, know two level 1 spells, and know four cantrips. The only
+            difference from vanilla D&amp;D is that, rather than learning spells according to the sorcerer spell list,
+            this character would learn them according to their movepool. Spell preparation and changing are both
+            handled as usual according to a character&apos;s class. Special slots are recovered however a character&apos;s
+            spell slots would typically be recovered.
+          </p>
+
+          <p>
+            Attack Moves known do not count against Special Moves known and Special Moves do not count against Attack
+            Moves known. These are each fully independent. In fact, some moves have both an Attack Move version and a
+            Special Move version. A Pokemon is able to learn both of these so long as they meet the requirements of
+            each individually.
+          </p>
+        </section>
       </div>
     </main>
   );

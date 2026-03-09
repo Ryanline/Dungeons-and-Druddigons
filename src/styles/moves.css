@@ -19,6 +19,15 @@
   margin-top: 18px;
 }
 
+.moves-doc{
+  margin-top: 26px;
+  max-width: none;
+}
+
+.moves-doc h2{
+  margin: 22px 0 10px;
+}
+
 .moves-page{
   --moves-cols: minmax(190px, 1.35fr) 76px 66px minmax(105px, 0.85fr) minmax(95px, 0.8fr) minmax(240px, 1.95fr);
 }

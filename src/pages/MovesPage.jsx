@@ -119,16 +119,37 @@ async function fetchMovesFromSheet() {
 
   const csv = await response.text();
   const parsed = Papa.parse(csv, {
-    header: true,
+    header: false,
     skipEmptyLines: true,
-    transformHeader: (header) =>
-      String(header || "")
-        .replace(/\ufeff/g, "")
-        .trim()
-        .toUpperCase(),
   });
+
   if (parsed.errors?.length) throw new Error("Moves sheet CSV parsing failed.");
-  return Array.isArray(parsed.data) ? parsed.data : [];
+  if (!Array.isArray(parsed.data)) return [];
+
+  const stripPrefix = (value, prefix) => {
+    const text = String(value ?? "").trim();
+    const re = new RegExp(`^${prefix}\\s+`, "i");
+    return text.replace(re, "").trim();
+  };
+
+  return parsed.data.map((row) => {
+    const cells = Array.isArray(row) ? row : [];
+    return {
+      NAM: stripPrefix(cells[0], "NAM"),
+      TYP: stripPrefix(cells[1], "TYP"),
+      REQ: stripPrefix(cells[2], "REQ"),
+      CAT: stripPrefix(cells[3], "CAT"),
+      RAN: stripPrefix(cells[4], "RAN"),
+      ECO: stripPrefix(cells[5], "ECO"),
+      DUR: stripPrefix(cells[6], "DUR"),
+      AMT: stripPrefix(cells[7], "AMT"),
+      DIC: stripPrefix(cells[8], "DIC"),
+      DAM: stripPrefix(cells[9], "DAM"),
+      PRO: stripPrefix(cells[10], "PRO"),
+      SUM: stripPrefix(cells[11], "SUM"),
+      MEC: stripPrefix(cells[12], "MEC"),
+    };
+  });
 }
 
 function DetailCard({ move }) {

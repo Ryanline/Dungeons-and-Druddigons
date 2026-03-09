@@ -50,9 +50,9 @@ const normalizeMove = (raw, index) => {
 const typeIconPath = (type) => assetUrl(`resources/images/types/${String(type || "").trim().toLowerCase()}.png`);
 const categoryIconPath = (category) => {
   const normalized = String(category || "").trim().toLowerCase();
-  if (normalized === "attack") return assetUrl("resources/images/categories/attack.png");
-  if (normalized === "special attack") return assetUrl("resources/images/categories/special.png");
-  if (normalized === "status") return assetUrl("resources/images/categories/status.png");
+  if (normalized.includes("special")) return assetUrl("resources/images/categories/special.png");
+  if (normalized.includes("status")) return assetUrl("resources/images/categories/status.png");
+  if (normalized.includes("attack")) return assetUrl("resources/images/categories/attack.png");
   return "";
 };
 
@@ -177,28 +177,27 @@ function DetailCard({ move }) {
     <>
       <div className="detail-head">
         <h2 className="detail-name">{String(move.name || "-").toUpperCase()}</h2>
-        <img
-          className="detail-type"
-          src={typeIconPath(move.type)}
-          alt={`${move.type || "Type"} type`}
-          onError={(event) => {
-            event.currentTarget.style.visibility = "hidden";
-          }}
-        />
-      </div>
-
-      {categoryIconPath(move.category) && (
-        <div className="detail-cat-wrap">
+        <div className="detail-icons">
           <img
-            className="detail-cat-icon"
-            src={categoryIconPath(move.category)}
-            alt={`${move.category || "Category"} category`}
+            className="detail-type"
+            src={typeIconPath(move.type)}
+            alt={`${move.type || "Type"} type`}
             onError={(event) => {
               event.currentTarget.style.visibility = "hidden";
             }}
           />
+          {categoryIconPath(move.category) && (
+            <img
+              className="detail-cat-icon"
+              src={categoryIconPath(move.category)}
+              alt={`${move.category || "Category"} category`}
+              onError={(event) => {
+                event.currentTarget.style.visibility = "hidden";
+              }}
+            />
+          )}
         </div>
-      )}
+      </div>
 
       <div className="detail-subtitle">{subtitle}</div>
 
@@ -223,6 +222,7 @@ export function MovesPage() {
   const [allMoves, setAllMoves] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "name", direction: "asc" });
 
   const clickSoundRef = useRef(null);
@@ -283,9 +283,18 @@ export function MovesPage() {
     return list;
   }, [allMoves, sortConfig]);
 
+  const visibleMoves = useMemo(() => {
+    const needle = String(searchQuery || "").trim().toLowerCase();
+    if (!needle) return sortedMoves;
+    return sortedMoves.filter((move) => {
+      const haystack = `${move.name} ${move.type} ${move.category} ${move.economy} ${move.range} ${formatRequirement(move)}`.toLowerCase();
+      return haystack.includes(needle);
+    });
+  }, [sortedMoves, searchQuery]);
+
   const selectedMove = useMemo(
-    () => sortedMoves.find((move) => move.id === selectedId) || null,
-    [sortedMoves, selectedId]
+    () => visibleMoves.find((move) => move.id === selectedId) || null,
+    [visibleMoves, selectedId]
   );
 
   const requestSort = (key) => {
@@ -339,6 +348,19 @@ export function MovesPage() {
         <div className="moves-shell" aria-label="Moves Browser">
           <section className="moves-left" aria-label="Move List">
             <div className="moves-list-frame">
+              <div className="moves-search">
+                <input
+                  className="moves-search__input"
+                  type="search"
+                  autoComplete="off"
+                  placeholder="Search moves..."
+                  value={searchQuery}
+                  onChange={(event) => {
+                    setSearchQuery(event.target.value);
+                    setSelectedId(null);
+                  }}
+                />
+              </div>
               <div className="moves-header" aria-label="Sortable moves columns">
                 <button type="button" className="sort-head" onClick={() => requestSort("name")}>NAME{sortArrow("name")}</button>
                 <button type="button" className="sort-head" onClick={() => requestSort("type")}>TYPE{sortArrow("type")}</button>
@@ -351,9 +373,12 @@ export function MovesPage() {
               <div className="moves-list" role="list" aria-label="Moves">
                 {error && <div className="moves-loading">{error}</div>}
                 {!error && !sortedMoves.length && <div className="moves-loading">Loading moves...</div>}
+                {!error && sortedMoves.length > 0 && !visibleMoves.length && (
+                  <div className="moves-loading">No moves match.</div>
+                )}
 
                 {!error &&
-                  sortedMoves.map((move) => (
+                  visibleMoves.map((move) => (
                     <div
                       key={move.id}
                       className={`move-row${move.id === selectedId ? " is-selected" : ""}`}

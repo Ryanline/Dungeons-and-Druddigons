@@ -31,6 +31,25 @@
   border: 3px solid #6f6b98;
 }
 
+.moves-search{
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.18);
+}
+
+.moves-search__input{
+  width: 100%;
+  border: 1px solid rgba(0,0,0,0.25);
+  background: #fff;
+  padding: 6px 8px;
+  font-family: "PokemonRS", "Open Sans", sans-serif;
+  font-size: 14px;
+}
+
+.moves-search__input:focus{
+  outline: none;
+  border-color: #6f6b98;
+}
+
 .moves-header{
   display: grid;
   grid-template-columns: 1.3fr 0.7fr 0.8fr 1fr 0.8fr 1.2fr;
@@ -161,6 +180,12 @@
   margin: 0;
 }
 
+.detail-icons{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .detail-type{
   width: 62px;
   height: auto;
@@ -173,12 +198,8 @@
   margin-bottom: 18px;
 }
 
-.detail-cat-wrap{
-  margin-bottom: 8px;
-}
-
 .detail-cat-icon{
-  width: 64px;
+  width: 52px;
   height: auto;
   object-fit: contain;
   image-rendering: pixelated;

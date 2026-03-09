@@ -48,6 +48,13 @@ const normalizeMove = (raw, index) => {
 };
 
 const typeIconPath = (type) => assetUrl(`resources/images/types/${String(type || "").trim().toLowerCase()}.png`);
+const categoryIconPath = (category) => {
+  const normalized = String(category || "").trim().toLowerCase();
+  if (normalized === "attack") return assetUrl("resources/images/categories/attack.png");
+  if (normalized === "special attack") return assetUrl("resources/images/categories/special.png");
+  if (normalized === "status") return assetUrl("resources/images/categories/status.png");
+  return "";
+};
 
 const parseRequirementNumber = (rawRequirement) => {
   const text = String(rawRequirement || "").trim();
@@ -179,6 +186,19 @@ function DetailCard({ move }) {
           }}
         />
       </div>
+
+      {categoryIconPath(move.category) && (
+        <div className="detail-cat-wrap">
+          <img
+            className="detail-cat-icon"
+            src={categoryIconPath(move.category)}
+            alt={`${move.category || "Category"} category`}
+            onError={(event) => {
+              event.currentTarget.style.visibility = "hidden";
+            }}
+          />
+        </div>
+      )}
 
       <div className="detail-subtitle">{subtitle}</div>
 
@@ -352,7 +372,21 @@ export function MovesPage() {
                           }}
                         />
                       </div>
-                      <div className="meta">{move.category || "-"}</div>
+                      <div className="move-cat-wrap">
+                        {categoryIconPath(move.category) ? (
+                          <img
+                            className="cat-icon"
+                            src={categoryIconPath(move.category)}
+                            alt={`${move.category || "Category"} category`}
+                            loading="lazy"
+                            onError={(event) => {
+                              event.currentTarget.style.visibility = "hidden";
+                            }}
+                          />
+                        ) : (
+                          <span className="meta">{move.category || "-"}</span>
+                        )}
+                      </div>
                       <div className="meta">{move.economy || "-"}</div>
                       <div className="meta">{move.range || "-"}</div>
                       <div className="meta">{formatRequirement(move)}</div>

@@ -99,7 +99,19 @@
   align-items: center;
 }
 
+.move-cat-wrap{
+  display: flex;
+  align-items: center;
+}
+
 .type-icon{
+  width: 52px;
+  height: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.cat-icon{
   width: 52px;
   height: auto;
   object-fit: contain;
@@ -159,6 +171,17 @@
 .detail-subtitle{
   font-size: 20px;
   margin-bottom: 18px;
+}
+
+.detail-cat-wrap{
+  margin-bottom: 8px;
+}
+
+.detail-cat-icon{
+  width: 64px;
+  height: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .detail-stack{

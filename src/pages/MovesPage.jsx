@@ -2,7 +2,6 @@
 import Papa from "papaparse";
 import { assetUrl } from "../utils/assetUrl";
 
-const FAV_KEY = "dd_move_favorites_v1";
 const SHEET_ID = "1jxuYYlsJmwDGGaq533WraM2tkCr22WU4EuY92lpbzHk";
 const MOVES_TAB = "moves";
 
@@ -15,89 +14,102 @@ const get = (obj, keys, fallback = "") => {
   return fallback;
 };
 
-const parsePlayerLevel = (requirement) => {
-  const match = String(requirement || "").match(/(\d+)/);
-  return match ? Number(match[1]) : null;
-};
-
-const parseSpellLevel = (requirement) => {
-  const text = String(requirement || "").toLowerCase();
-  if (text.includes("cantrip")) return 0;
-  const match = text.match(/(\d+)/);
-  return match ? Number(match[1]) : null;
-};
-
-const isSpellMove = (move) => {
-  const requirement = String(move.requirement || "").toLowerCase();
-  const designation = String(move.designation || "").toLowerCase();
-  const actionType = String(move.actionType || "").toLowerCase();
-  const summary = String(move.summary || "").toLowerCase();
-
-  const isLeveledSpell = /^lv\.?\s*\d+/.test(requirement.trim());
-
-  return (
-    requirement.includes("cantrip") ||
-    requirement.includes("spell") ||
-    isLeveledSpell ||
-    designation.includes("spell") ||
-    actionType.includes("spell") ||
-    summary.includes("spell")
-  );
-};
-
 const makeId = (name, index) => {
   const slug = String(name || "")
     .toLowerCase()
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
-
   return slug ? `${slug}-${index}` : `move-${index}`;
 };
 
 const normalizeMove = (raw, index) => {
-  const name = get(raw, ["Attack", "Move Name", "moveName", "name", "Move"], "");
+  const name = get(raw, ["NAM", "IAM", "Name", "Attack", "Move Name", "name"], "");
+  const type = get(raw, ["TYP", "Type", "Move Type", "type"], "");
+  const category = get(raw, ["CAT", "Category", "Designation", "designation"], "");
+  const economy = get(raw, ["ECO", "Economy", "Casting Time", "Action Type", "actionType"], "");
+  const range = get(raw, ["RAN", "Range", "range"], "");
+  const requirementRaw = get(raw, ["REQ", "Requirement", "Level", "requirement"], "");
 
   return {
     id: makeId(name, index),
     name,
-    type: get(raw, ["Move Type", "type", "Type"], ""),
-    designation: get(raw, ["Category", "Designation", "designation"], ""),
-    requirement: get(raw, ["Level", "Requirement", "requirement"], ""),
-    actionType: get(raw, ["Casting Time", "Action Type", "actionType"], ""),
-    range: get(raw, ["Range", "range"], ""),
-    duration: get(raw, ["Duration", "duration"], ""),
-    properties: get(raw, ["Properties", "properties"], ""),
-    summary: get(raw, ["Mini description", "Summary", "summary"], ""),
-    mechanics: get(raw, ["Description", "Mechanics", "mechanics"], ""),
-    diceDamage: get(raw, ["Dice Damage", "diceDamage"], ""),
-    moveTypeWord: get(raw, ["Move Type", "type", "Type"], ""),
+    type,
+    category,
+    economy,
+    range,
+    requirementRaw,
+    duration: get(raw, ["DUR", "Duration", "duration"], ""),
+    components: get(raw, ["COM", "Components", "CMP", "components"], ""),
+    properties: get(raw, ["PRO", "Properties", "properties"], ""),
+    summary: get(raw, ["SUM", "Summary", "summary"], ""),
+    mechanics: get(raw, ["MEC", "Mechanics", "mechanics", "Description"], ""),
+    dam: get(raw, ["DAM", "Dice Damage", "diceDamage"], ""),
   };
 };
 
 const typeIconPath = (type) => assetUrl(`resources/images/types/${String(type || "").trim().toLowerCase()}.png`);
 
-const buildDescription = (move) => {
-  const dice = String(move.diceDamage || "").trim();
-  const typeWord = String(move.moveTypeWord || "").trim();
-  const mechanics = String(move.mechanics || "")
-    .replaceAll("DICE_DAMAGE", dice || "-")
-    .replaceAll("MOVE_TYPE", typeWord || "-")
-    .trim();
-
-  return [String(move.summary || "").trim(), mechanics].filter(Boolean).join(" ");
+const parseRequirementNumber = (rawRequirement) => {
+  const text = String(rawRequirement || "").trim();
+  if (!text) return null;
+  if (/^cantrip$/i.test(text)) return 0;
+  const match = text.match(/(\d+)/);
+  return match ? Number(match[1]) : null;
 };
 
-const loadFavs = () => {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(FAV_KEY) || "[]");
-    return new Set(Array.isArray(parsed) ? parsed : []);
-  } catch {
-    return new Set();
+const isAttackCategory = (category) => /^attack$/i.test(String(category || "").trim());
+const isSpecialCategory = (category) => /^special attack$/i.test(String(category || "").trim());
+const isStatusCategory = (category) => /^status$/i.test(String(category || "").trim());
+
+const toOrdinal = (n) => {
+  if (!Number.isFinite(n) || n <= 0) return "-";
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 13) return `${n}th`;
+  const mod10 = n % 10;
+  if (mod10 === 1) return `${n}st`;
+  if (mod10 === 2) return `${n}nd`;
+  if (mod10 === 3) return `${n}rd`;
+  return `${n}th`;
+};
+
+const formatRequirement = (move) => {
+  const reqNum = parseRequirementNumber(move.requirementRaw);
+  if (reqNum === 0) return "Cantrip";
+  if (!Number.isFinite(reqNum)) return String(move.requirementRaw || "-").trim() || "-";
+  if (isAttackCategory(move.category)) return `Player level ${reqNum}`;
+  return `${toOrdinal(reqNum)}-level special slot`;
+};
+
+const formatDetailSubtitle = (move) => {
+  const reqNum = parseRequirementNumber(move.requirementRaw);
+  if (isAttackCategory(move.category)) {
+    if (reqNum === 0) return "Attack move (Cantrip)";
+    if (Number.isFinite(reqNum)) return `Attack move (req. player level ${reqNum})`;
+    return "Attack move";
   }
+
+  if (isSpecialCategory(move.category)) {
+    if (reqNum === 0) return "Cantrip special move";
+    if (Number.isFinite(reqNum)) return `${toOrdinal(reqNum)}-level special move`;
+    return "Special move";
+  }
+
+  if (isStatusCategory(move.category)) {
+    if (reqNum === 0) return "Cantrip status move";
+    if (Number.isFinite(reqNum)) return `${toOrdinal(reqNum)}-level status move`;
+    return "Status move";
+  }
+
+  return "Move";
 };
 
-const saveFavs = (favs) => {
-  localStorage.setItem(FAV_KEY, JSON.stringify([...favs]));
+const buildDescription = (move) => {
+  const merged = `${String(move.summary || "").trim()} ${String(move.mechanics || "").trim()}`.trim();
+  return merged
+    .replaceAll("DAM", String(move.dam || "-").trim() || "-")
+    .replaceAll("TYP", String(move.type || "-").trim() || "-")
+    .replaceAll("MOVE_DAMAGE", String(move.dam || "-").trim() || "-")
+    .replaceAll("MOVE_TYPE", String(move.type || "-").trim() || "-");
 };
 
 async function fetchMovesFromSheet() {
@@ -107,15 +119,11 @@ async function fetchMovesFromSheet() {
 
   const csv = await response.text();
   const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
-
-  if (parsed.errors?.length) {
-    throw new Error("Moves sheet CSV parsing failed.");
-  }
-
+  if (parsed.errors?.length) throw new Error("Moves sheet CSV parsing failed.");
   return Array.isArray(parsed.data) ? parsed.data : [];
 }
 
-function DetailCard({ move, isNarrow, onClose }) {
+function DetailCard({ move }) {
   if (!move) {
     return (
       <div className="move-detail__empty">
@@ -125,40 +133,34 @@ function DetailCard({ move, isNarrow, onClose }) {
     );
   }
 
+  const subtitle = formatDetailSubtitle(move);
   const description = buildDescription(move);
-  const levelLabel = isSpellMove(move) ? "Spell Level" : "Player Level";
+  const showCastingBlock = isSpecialCategory(move.category) || isStatusCategory(move.category);
 
   return (
     <>
       <div className="detail-head">
         <h2 className="detail-name">{String(move.name || "-").toUpperCase()}</h2>
+        <img
+          className="detail-type"
+          src={typeIconPath(move.type)}
+          alt={`${move.type || "Type"} type`}
+          onError={(event) => {
+            event.currentTarget.style.visibility = "hidden";
+          }}
+        />
+      </div>
 
-        <div className="detail-head__right">
-          <img
-            className="detail-type"
-            src={typeIconPath(move.type)}
-            alt={`${move.type || "Type"} type`}
-            onError={(event) => {
-              event.currentTarget.style.visibility = "hidden";
-            }}
-          />
+      <div className="detail-subtitle">{subtitle}</div>
 
-          {isNarrow && (
-            <button className="moves-modal__close moves-modal__close--inhead" type="button" aria-label="Close" title="Close" onClick={onClose}>
-              ×
-            </button>
-          )}
+      {showCastingBlock && (
+        <div className="detail-stack">
+          <div className="detail-item"><strong>Casting Time:</strong> {move.economy || "-"}</div>
+          <div className="detail-item"><strong>Range:</strong> {move.range || "-"}</div>
+          <div className="detail-item"><strong>Components:</strong> {move.components || "-"}</div>
+          <div className="detail-item"><strong>Duration:</strong> {move.duration || "-"}</div>
         </div>
-      </div>
-
-      <div className="detail-stack">
-        <div className="detail-item"><strong>{levelLabel}:</strong> {move.requirement || "-"}</div>
-        <div className="detail-item"><strong>Action Type:</strong> {move.actionType || "-"}</div>
-        <div className="detail-item"><strong>Designation:</strong> {move.designation || "-"}</div>
-        <div className="detail-item"><strong>Range:</strong> {move.range || "-"}</div>
-        <div className="detail-item"><strong>Duration:</strong> {move.duration || "-"}</div>
-        <div className="detail-item"><strong>Properties:</strong> {move.properties || "-"}</div>
-      </div>
+      )}
 
       <div className="detail-desc">
         <div className="poke-title">Description</div>
@@ -170,14 +172,9 @@ function DetailCard({ move, isNarrow, onClose }) {
 
 export function MovesPage() {
   const [allMoves, setAllMoves] = useState([]);
-  const [currentTab, setCurrentTab] = useState("weapon");
-  const [currentFilter, setCurrentFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isNarrow, setIsNarrow] = useState(() => window.matchMedia("(max-width: 980px)").matches);
   const [error, setError] = useState("");
-  const [favs, setFavs] = useState(() => loadFavs());
+  const [sortConfig, setSortConfig] = useState({ key: "name", direction: "asc" });
 
   const clickSoundRef = useRef(null);
 
@@ -192,42 +189,14 @@ export function MovesPage() {
   }, []);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 980px)");
-    const handleChange = (event) => setIsNarrow(event.matches);
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isNarrow) {
-      setIsModalOpen(false);
-      document.body.classList.remove("moves-modal-open");
-    }
-  }, [isNarrow]);
-
-  useEffect(() => {
-    const handleKeydown = (event) => {
-      if (event.key === "Escape") {
-        setIsModalOpen(false);
-        document.body.classList.remove("moves-modal-open");
-      }
-    };
-
-    document.addEventListener("keydown", handleKeydown);
-    return () => document.removeEventListener("keydown", handleKeydown);
-  }, []);
-
-  useEffect(() => {
     let cancelled = false;
 
     const load = async () => {
       try {
         const source = await fetchMovesFromSheet();
         if (!cancelled) {
-          setAllMoves(source.map((item, index) => normalizeMove(item, index)));
+          const normalized = source.map((item, index) => normalizeMove(item, index)).filter((move) => move.name);
+          setAllMoves(normalized);
           setError("");
         }
       } catch (sheetError) {
@@ -241,67 +210,47 @@ export function MovesPage() {
     };
   }, []);
 
-  useEffect(() => {
-    saveFavs(favs);
-  }, [favs]);
+  const sortedMoves = useMemo(() => {
+    const list = [...allMoves];
+    const { key, direction } = sortConfig;
 
-  const filteredMoves = useMemo(() => {
-    return allMoves.filter((move) => {
-      if (currentTab === "weapon" && isSpellMove(move)) return false;
-      if (currentTab === "spell" && !isSpellMove(move)) return false;
+    list.sort((a, b) => {
+      let aValue = "";
+      let bValue = "";
 
-      if (searchQuery) {
-        const name = String(move.name || "").toLowerCase();
-        if (!name.includes(searchQuery)) return false;
+      if (key === "requirement") {
+        aValue = parseRequirementNumber(a.requirementRaw) ?? Number.MAX_SAFE_INTEGER;
+        bValue = parseRequirementNumber(b.requirementRaw) ?? Number.MAX_SAFE_INTEGER;
+      } else {
+        aValue = String(a[key] ?? "").toLowerCase();
+        bValue = String(b[key] ?? "").toLowerCase();
       }
 
-      if (currentFilter === "fav") return favs.has(move.name);
-      if (currentFilter === "all") return true;
-
-      if (currentTab === "weapon" && currentFilter.startsWith("L")) {
-        return parsePlayerLevel(move.requirement) === Number(currentFilter.slice(1));
-      }
-
-      if (currentTab === "spell") {
-        if (currentFilter === "cantrip") return parseSpellLevel(move.requirement) === 0;
-        return parseSpellLevel(move.requirement) === Number(currentFilter);
-      }
-
-      return true;
+      if (aValue < bValue) return direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return direction === "asc" ? 1 : -1;
+      return 0;
     });
-  }, [allMoves, currentTab, currentFilter, favs, searchQuery]);
 
+    return list;
+  }, [allMoves, sortConfig]);
 
   const selectedMove = useMemo(
-    () => filteredMoves.find((move) => move.id === selectedId) || null,
-    [filteredMoves, selectedId]
+    () => sortedMoves.find((move) => move.id === selectedId) || null,
+    [sortedMoves, selectedId]
   );
 
-  useEffect(() => {
-    if (selectedId && !filteredMoves.some((move) => move.id === selectedId)) {
-      setSelectedId(null);
-      setIsModalOpen(false);
-      document.body.classList.remove("moves-modal-open");
-    }
-  }, [filteredMoves, selectedId]);
-
-  const changeTab = (tab) => {
-    setCurrentTab(tab);
-    setCurrentFilter("all");
-    setSelectedId(null);
-    setIsModalOpen(false);
-    document.body.classList.remove("moves-modal-open");
+  const requestSort = (key) => {
+    setSortConfig((current) => {
+      if (current.key === key) {
+        return { key, direction: current.direction === "asc" ? "desc" : "asc" };
+      }
+      return { key, direction: "asc" };
+    });
   };
 
-  const openModal = () => {
-    if (!isNarrow) return;
-    setIsModalOpen(true);
-    document.body.classList.add("moves-modal-open");
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    document.body.classList.remove("moves-modal-open");
+  const sortArrow = (key) => {
+    if (sortConfig.key !== key) return "";
+    return sortConfig.direction === "asc" ? " ▲" : " ▼";
   };
 
   const handleMoveSelect = (move) => {
@@ -315,22 +264,13 @@ export function MovesPage() {
     }
 
     setSelectedId(move.id);
-    if (isNarrow) openModal();
-  };
-
-  const toggleFavorite = (moveName) => {
-    setFavs((current) => {
-      const next = new Set(current);
-      if (next.has(moveName)) next.delete(moveName);
-      else next.add(moveName);
-      return next;
-    });
   };
 
   return (
     <main className="page moves-page" role="main">
       <div className="content">
         <h1>Moves</h1>
+
         <p className="lede">
           Moves are categorized as <q>Weapon Attack Moves</q> and <q>Spell Moves.</q> The moves a
           Pokemon can learn are based on their usual movepool. Use{" "}
@@ -349,207 +289,55 @@ export function MovesPage() {
 
         <div className="moves-shell" aria-label="Moves Browser">
           <section className="moves-left" aria-label="Move List">
-            <div className="moves-tabs" role="tablist" aria-label="Move Type Tabs">
-              <button
-                className={`tab${currentTab === "weapon" ? " is-active" : ""}`}
-                id="tab-weapon"
-                role="tab"
-                aria-selected={currentTab === "weapon"}
-                type="button"
-                onClick={() => changeTab("weapon")}
-              >
-                Weapon Attacks
-              </button>
-              <button
-                className={`tab${currentTab === "spell" ? " is-active" : ""}`}
-                id="tab-spell"
-                role="tab"
-                aria-selected={currentTab === "spell"}
-                type="button"
-                onClick={() => changeTab("spell")}
-              >
-                Spells
-              </button>
-            </div>
+            <div className="moves-list-frame">
+              <div className="moves-header" aria-label="Sortable moves columns">
+                <button type="button" className="sort-head" onClick={() => requestSort("name")}>NAME{sortArrow("name")}</button>
+                <button type="button" className="sort-head" onClick={() => requestSort("type")}>TYPE{sortArrow("type")}</button>
+                <button type="button" className="sort-head" onClick={() => requestSort("category")}>CAT{sortArrow("category")}</button>
+                <button type="button" className="sort-head" onClick={() => requestSort("economy")}>ECONOMY{sortArrow("economy")}</button>
+                <button type="button" className="sort-head" onClick={() => requestSort("range")}>RANGE{sortArrow("range")}</button>
+                <button type="button" className="sort-head" onClick={() => requestSort("requirement")}>REQUIREMENT{sortArrow("requirement")}</button>
+              </div>
 
-            <div className="moves-filters" aria-label="Filters">
-              <button
-                type="button"
-                className={`pill${currentFilter === "fav" ? " is-active" : ""}`}
-                onClick={() => {
-                  setCurrentFilter("fav");
-                  setSelectedId(null);
-                  closeModal();
-                }}
-              >
-                <span className="star">★</span>Fav
-              </button>
-              <button
-                type="button"
-                className={`pill${currentFilter === "all" ? " is-active" : ""}`}
-                onClick={() => {
-                  setCurrentFilter("all");
-                  setSelectedId(null);
-                  closeModal();
-                }}
-              >
-                All
-              </button>
+              <div className="moves-list" role="list" aria-label="Moves">
+                {error && <div className="moves-loading">{error}</div>}
+                {!error && !sortedMoves.length && <div className="moves-loading">Loading moves...</div>}
 
-              {currentTab === "weapon" &&
-                Array.from({ length: 12 }).map((_, index) => {
-                  const level = index + 1;
-                  const key = `L${level}`;
-                  return (
-                    <button
-                      key={key}
-                      type="button"
-                      className={`pill${currentFilter === key ? " is-active" : ""}`}
-                      onClick={() => {
-                        setCurrentFilter(key);
-                        setSelectedId(null);
-                        closeModal();
-                      }}
+                {!error &&
+                  sortedMoves.map((move) => (
+                    <div
+                      key={move.id}
+                      className={`move-row${move.id === selectedId ? " is-selected" : ""}`}
+                      role="listitem"
+                      onClick={() => handleMoveSelect(move)}
                     >
-                      {level}
-                    </button>
-                  );
-                })}
-
-              {currentTab === "spell" && (
-                <>
-                  <button
-                    type="button"
-                    className={`pill${currentFilter === "cantrip" ? " is-active" : ""}`}
-                    onClick={() => {
-                      setCurrentFilter("cantrip");
-                      setSelectedId(null);
-                      closeModal();
-                    }}
-                  >
-                    C
-                  </button>
-                  {Array.from({ length: 9 }).map((_, index) => {
-                    const level = index + 1;
-                    const key = String(level);
-                    return (
-                      <button
-                        key={key}
-                        type="button"
-                        className={`pill${currentFilter === key ? " is-active" : ""}`}
-                        onClick={() => {
-                          setCurrentFilter(key);
-                          setSelectedId(null);
-                          closeModal();
-                        }}
-                      >
-                        {level}
-                      </button>
-                    );
-                  })}
-                </>
-              )}
-            </div>
-
-            <div className="moves-search" aria-label="Search moves">
-              <input
-                id="moves-search"
-                className="moves-search__input"
-                type="text"
-                inputMode="search"
-                autoComplete="off"
-                placeholder="Search moves..."
-                aria-label="Search moves by name"
-                value={searchQuery}
-                onChange={(event) => {
-                  setSearchQuery(event.target.value.trim().toLowerCase());
-                  setSelectedId(null);
-                  closeModal();
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Escape") {
-                    setSearchQuery("");
-                    setSelectedId(null);
-                    closeModal();
-                  }
-                }}
-              />
-            </div>
-
-            <div className="moves-header" aria-hidden="true">
-              <div></div>
-              <div>Move</div>
-              <div></div>
-              <div>Action</div>
-              <div>Range</div>
-              <div>Level</div>
-            </div>
-
-            <div className="moves-list" role="list" aria-label="Moves">
-              {error && <div className="moves-loading">{error}</div>}
-              {!allMoves.length && <div className="moves-loading">Loading moves...</div>}
-              {allMoves.length > 0 && filteredMoves.length === 0 && (
-                <div className="moves-loading">No moves match this filter yet.</div>
-              )}
-
-              {filteredMoves.map((move) => (
-                <div
-                  key={move.id}
-                  className={`move-row${move.id === selectedId ? " is-selected" : ""}`}
-                  role="listitem"
-                  onClick={() => handleMoveSelect(move)}
-                >
-                  <button
-                    type="button"
-                    className={`move-star${favs.has(move.name) ? " is-fav" : ""}`}
-                    title={favs.has(move.name) ? "Unfavorite" : "Favorite"}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      toggleFavorite(move.name);
-                    }}
-                  >
-                    {favs.has(move.name) ? "★" : "☆"}
-                  </button>
-                  <div className="move-name">{move.name || "-"}</div>
-                  <img
-                    className="type-icon"
-                    alt={move.type ? `${move.type} type` : "Type"}
-                    src={typeIconPath(move.type)}
-                    loading="lazy"
-                    onError={(event) => {
-                      event.currentTarget.style.visibility = "hidden";
-                    }}
-                  />
-                  <div className="meta">{move.actionType || "-"}</div>
-                  <div className="meta">
-                    {(move.designation || "-").replace("Weapon Attack", "").replace("Spell Attack", "Spell").trim() || "-"}
-                  </div>
-                  <div className="meta">{move.requirement || "-"}</div>
-                </div>
-              ))}
+                      <div className="move-name">{move.name || "-"}</div>
+                      <div className="move-type-wrap">
+                        <img
+                          className="type-icon"
+                          alt={move.type ? `${move.type} type` : "Type"}
+                          src={typeIconPath(move.type)}
+                          loading="lazy"
+                          onError={(event) => {
+                            event.currentTarget.style.visibility = "hidden";
+                          }}
+                        />
+                      </div>
+                      <div className="meta">{move.category || "-"}</div>
+                      <div className="meta">{move.economy || "-"}</div>
+                      <div className="meta">{move.range || "-"}</div>
+                      <div className="meta">{formatRequirement(move)}</div>
+                    </div>
+                  ))}
+              </div>
             </div>
           </section>
 
           <section className="moves-right" aria-label="Move Details">
-            <div className="move-detail">
-              <DetailCard move={selectedMove} isNarrow={false} onClose={closeModal} />
+            <div className="move-detail card-border">
+              <DetailCard move={selectedMove} />
             </div>
           </section>
-        </div>
-      </div>
-
-      <div className={`moves-modal${isModalOpen ? " is-open" : ""}`} aria-hidden={!isModalOpen}>
-        <div className="moves-modal__backdrop" data-close="true" onClick={closeModal} />
-        <div className="moves-modal__panel" role="dialog" aria-modal="true" aria-label="Move details">
-          <button className="moves-modal__close" type="button" aria-label="Close" title="Close" onClick={closeModal}>
-            ×
-          </button>
-
-          <div className="moves-modal__content">
-            <div className="move-detail move-detail--modal" id="moves-modal-detail">
-              <DetailCard move={selectedMove} isNarrow={true} onClose={closeModal} />
-            </div>
-          </div>
         </div>
       </div>
     </main>

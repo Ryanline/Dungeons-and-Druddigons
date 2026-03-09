@@ -84,7 +84,9 @@ const formatRequirement = (move) => {
   if (reqNum === 0) return "Cantrip";
   if (!Number.isFinite(reqNum)) return String(move.requirementRaw || "-").trim() || "-";
   if (isAttackCategory(move.category)) return `Player level ${reqNum}`;
-  return `${toOrdinal(reqNum)}-level special slot`;
+  if (isSpecialCategory(move.category)) return `${toOrdinal(reqNum)}-level special attack slot`;
+  if (isStatusCategory(move.category)) return `${toOrdinal(reqNum)}-level status slot`;
+  return `${toOrdinal(reqNum)}-level slot`;
 };
 
 const formatDetailSubtitle = (move) => {
@@ -96,9 +98,9 @@ const formatDetailSubtitle = (move) => {
   }
 
   if (isSpecialCategory(move.category)) {
-    if (reqNum === 0) return "Cantrip special move";
-    if (Number.isFinite(reqNum)) return `${toOrdinal(reqNum)}-level special move`;
-    return "Special move";
+    if (reqNum === 0) return "Cantrip special attack move";
+    if (Number.isFinite(reqNum)) return `${toOrdinal(reqNum)}-level special attack move`;
+    return "Special attack move";
   }
 
   if (isStatusCategory(move.category)) {

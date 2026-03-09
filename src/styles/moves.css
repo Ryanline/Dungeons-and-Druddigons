@@ -8,10 +8,14 @@
   max-width: 70ch;
 }
 
+.moves-page .content{
+  max-width: 1320px;
+}
+
 .moves-shell{
   display: grid;
-  grid-template-columns: 1.05fr 1fr;
-  gap: 18px;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 14px;
   margin-top: 18px;
 }
 
@@ -23,7 +27,7 @@
 }
 
 .moves-list-frame{
-  margin: 12px;
+  margin: 10px;
   border: 3px solid #6f6b98;
 }
 
@@ -31,7 +35,7 @@
   display: grid;
   grid-template-columns: 1.3fr 0.7fr 0.8fr 1fr 0.8fr 1.2fr;
   gap: 8px;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 
@@ -40,12 +44,13 @@
   background: transparent;
   text-align: left;
   font-family: "PokemonRS", "Open Sans", sans-serif;
-  font-size: 15px;
+  font-size: 13px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #222;
   cursor: pointer;
   padding: 0;
+  white-space: nowrap;
 }
 
 .sort-head:hover{
@@ -53,10 +58,10 @@
 }
 
 .moves-list{
-  height: 540px;
+  height: 560px;
   overflow-y: auto;
   scrollbar-gutter: stable;
-  padding: 8px;
+  padding: 6px;
   font-family: "PokemonRS", "Open Sans", sans-serif;
 }
 
@@ -70,7 +75,7 @@
   grid-template-columns: 1.3fr 0.7fr 0.8fr 1fr 0.8fr 1.2fr;
   gap: 8px;
   align-items: center;
-  padding: 10px 10px;
+  padding: 8px 8px;
   margin: 6px;
   cursor: pointer;
   background: #fff;
@@ -83,9 +88,10 @@
 }
 
 .move-name{
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1.1;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .move-type-wrap{
@@ -94,28 +100,29 @@
 }
 
 .type-icon{
-  width: 58px;
+  width: 52px;
   height: auto;
   object-fit: contain;
   image-rendering: pixelated;
 }
 
 .meta{
-  font-size: 24px;
+  font-size: 18px;
   color: #222;
+  white-space: nowrap;
 }
 
 .moves-right .move-detail{
-  height: 620px;
+  height: 612px;
   overflow-y: auto;
   scrollbar-gutter: stable;
-  padding: 14px;
+  padding: 12px;
   font-family: "PokemonRS", "Open Sans", sans-serif;
 }
 
 .card-border{
   border: 3px solid #6f6b98;
-  margin: 12px;
+  margin: 10px;
 }
 
 .move-detail__empty{
@@ -124,7 +131,7 @@
 
 .poke-title{
   font-family: "PokemonRS", "Open Sans", sans-serif;
-  font-size: 26px;
+  font-size: 20px;
   margin-bottom: 10px;
 }
 
@@ -138,19 +145,19 @@
 
 .detail-name{
   font-family: "PokemonRS", "Open Sans", sans-serif;
-  font-size: 30px;
+  font-size: 24px;
   margin: 0;
 }
 
 .detail-type{
-  width: 74px;
+  width: 62px;
   height: auto;
   object-fit: contain;
   image-rendering: pixelated;
 }
 
 .detail-subtitle{
-  font-size: 30px;
+  font-size: 20px;
   margin-bottom: 18px;
 }
 
@@ -162,7 +169,7 @@
 }
 
 .detail-item{
-  font-size: 32px;
+  font-size: 18px;
   line-height: 1.25;
 }
 
@@ -170,7 +177,7 @@
   border-top: 1px solid rgba(0,0,0,0.18);
   padding-top: 14px;
   line-height: 1.55;
-  font-size: 30px;
+  font-size: 18px;
 }
 
 @media (max-width: 980px){

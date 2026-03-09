@@ -126,14 +126,14 @@
 }
 
 .type-icon{
-  width: 52px;
+  width: 44px;
   height: auto;
   object-fit: contain;
   image-rendering: pixelated;
 }
 
 .cat-icon{
-  width: 46px;
+  width: 39px;
   height: auto;
   object-fit: contain;
   image-rendering: pixelated;
@@ -195,7 +195,7 @@
 }
 
 .detail-type{
-  width: 62px;
+  width: 53px;
   height: auto;
   object-fit: contain;
   image-rendering: pixelated;
@@ -208,7 +208,7 @@
 }
 
 .detail-cat-icon{
-  width: 46px;
+  width: 39px;
   height: auto;
   object-fit: contain;
   image-rendering: pixelated;

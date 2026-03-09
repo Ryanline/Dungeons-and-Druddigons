@@ -23,12 +23,12 @@ const makeId = (name, index) => {
 };
 
 const normalizeMove = (raw, index) => {
-  const name = get(raw, ["NAM", "IAM", "Name", "Attack", "Move Name", "name"], "");
-  const type = get(raw, ["TYP", "Type", "Move Type", "type"], "");
-  const category = get(raw, ["CAT", "Category", "Designation", "designation"], "");
-  const economy = get(raw, ["ECO", "Economy", "Casting Time", "Action Type", "actionType"], "");
-  const range = get(raw, ["RAN", "Range", "range"], "");
-  const requirementRaw = get(raw, ["REQ", "Requirement", "Level", "requirement"], "");
+  const name = get(raw, ["NAM", "IAM", "NAME", "ATTACK", "MOVE NAME", "name"], "");
+  const type = get(raw, ["TYP", "TYPE", "MOVE TYPE", "type"], "");
+  const category = get(raw, ["CAT", "CATEGORY", "DESIGNATION", "designation"], "");
+  const economy = get(raw, ["ECO", "ECONOMY", "CASTING TIME", "ACTION TYPE", "actionType"], "");
+  const range = get(raw, ["RAN", "RANGE", "range"], "");
+  const requirementRaw = get(raw, ["REQ", "REQUIREMENT", "LEVEL", "requirement"], "");
 
   return {
     id: makeId(name, index),
@@ -38,12 +38,12 @@ const normalizeMove = (raw, index) => {
     economy,
     range,
     requirementRaw,
-    duration: get(raw, ["DUR", "Duration", "duration"], ""),
-    components: get(raw, ["COM", "Components", "CMP", "components"], ""),
-    properties: get(raw, ["PRO", "Properties", "properties"], ""),
-    summary: get(raw, ["SUM", "Summary", "summary"], ""),
-    mechanics: get(raw, ["MEC", "Mechanics", "mechanics", "Description"], ""),
-    dam: get(raw, ["DAM", "Dice Damage", "diceDamage"], ""),
+    duration: get(raw, ["DUR", "DURATION", "duration"], ""),
+    components: get(raw, ["COM", "COMPONENTS", "CMP", "components"], ""),
+    properties: get(raw, ["PRO", "PROPERTIES", "properties"], ""),
+    summary: get(raw, ["SUM", "SUMMARY", "summary"], ""),
+    mechanics: get(raw, ["MEC", "MECHANICS", "mechanics", "DESCRIPTION"], ""),
+    dam: get(raw, ["DAM", "DICE DAMAGE", "diceDamage"], ""),
   };
 };
 
@@ -118,7 +118,15 @@ async function fetchMovesFromSheet() {
   if (!response.ok) throw new Error(`Failed to load moves sheet (${response.status})`);
 
   const csv = await response.text();
-  const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+  const parsed = Papa.parse(csv, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: (header) =>
+      String(header || "")
+        .replace(/\ufeff/g, "")
+        .trim()
+        .toUpperCase(),
+  });
   if (parsed.errors?.length) throw new Error("Moves sheet CSV parsing failed.");
   return Array.isArray(parsed.data) ? parsed.data : [];
 }

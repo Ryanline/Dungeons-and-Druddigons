@@ -247,6 +247,11 @@
   font-weight: 400;
 }
 
+.detail-desc-label{
+  font-weight: 400;
+  margin-right: 6px;
+}
+
 @media (max-width: 980px){
   .moves-shell{
     grid-template-columns: 1fr;

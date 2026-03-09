@@ -210,9 +210,8 @@ function DetailCard({ move }) {
         </div>
       )}
 
-      <div className="detail-desc">
-        <div className="poke-title">Description</div>
-        <div style={{ whiteSpace: "pre-line" }}>{description || "-"}</div>
+      <div className="detail-desc" style={{ whiteSpace: "pre-line" }}>
+        <span className="detail-desc-label">Description:</span> {description || "-"}
       </div>
     </>
   );

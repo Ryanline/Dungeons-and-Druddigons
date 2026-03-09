@@ -9,18 +9,18 @@
 }
 
 .moves-page .content{
-  max-width: 1320px;
+  max-width: 1440px;
 }
 
 .moves-shell{
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
+  grid-template-columns: 1.4fr 1fr;
   gap: 14px;
   margin-top: 18px;
 }
 
 .moves-page{
-  --moves-cols: minmax(170px, 1.2fr) 72px 64px minmax(105px, 0.9fr) minmax(95px, 0.9fr) minmax(220px, 1.7fr);
+  --moves-cols: minmax(190px, 1.35fr) 76px 66px minmax(105px, 0.85fr) minmax(95px, 0.8fr) minmax(240px, 1.95fr);
 }
 
 .moves-left,
@@ -67,6 +67,11 @@
   align-items: center;
 }
 
+.moves-header > *,
+.move-row > *{
+  min-width: 0;
+}
+
 .sort-head{
   border: none;
   background: transparent;
@@ -108,7 +113,7 @@
   margin: 6px;
   cursor: pointer;
   background: #fff;
-  min-height: 52px;
+  min-height: 54px;
 }
 
 .move-row:hover,
